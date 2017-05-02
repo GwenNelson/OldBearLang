@@ -1,0 +1,5 @@
+(fun hello (name)
+     (print "Hello, " name "\n"))
+
+(hello "BearLang user")
+
