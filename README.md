@@ -34,6 +34,8 @@ Run bearlangi directly to open a REPL, pass it a filename to run that file.
 
 # using the compiler
 
+See make_repl.sh for an example of how to compile to native code - this is still quite hacky at present
+
 ```
 ~/BearLang/build$ ./bearlangc ../examples/helloworld.bear 
 ~/BearLang/build$ g++ -std=c++11 -lreadline -lbearlang -L. ../examples/helloworld.bear.cpp -I../include -I../sexp-cpp/include

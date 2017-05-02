@@ -3,6 +3,9 @@
 #include <bearlang/builtin_bear.h>
 #include <bearlang/cave.h>
 
+#include <bearlang/parser.h>
+#include <bearlang/cons_reader.h>
+
 #include <iostream>
 #include <sstream>
 
@@ -89,6 +92,20 @@ sexp::Value builtin_do_oper(BearCave* cave, sexp::Value cdr) {
     return retval;
 }
 
+// reads a string from stdin as a string type
+sexp::Value builtin_reads_func(BearCave* cave, sexp::Value cdr) {
+   std::string retval;
+   std::getline(std::cin,retval); 
+   return sexp::Value::string(retval);
+}
+
+// reads an s-expression from stdin and returns it as a parsed s-expression
+sexp::Value builtin_reade_func(BearCave* cave, sexp::Value cdr) {
+   ConsReader c;
+   SExpParser p;
+   return p.parse_string(c.get_line());
+}
+
 sexp::Value builtin_print_func(BearCave* cave, sexp::Value cdr) {
     for(sexp::ListIterator it(cdr); it != sexp::ListIterator(); ++it) {
         if(it->is_string()) {
@@ -109,6 +126,9 @@ void add_builtins(BearCave* c) {
      c->write_sym(">",    (BearVal*)new BuiltinBear(builtin_gt_oper));
      c->write_sym("do",   (BearVal*)new BuiltinBear(builtin_do_oper));
      c->write_sym("eq",   (BearVal*)new BuiltinBear(builtin_eq_oper));
+
+     c->write_sym("reads",(BearVal*)new BuiltinBear(builtin_reads_func));
+     c->write_sym("reade",(BearVal*)new BuiltinBear(builtin_reade_func));
      c->write_sym("print",(BearVal*)new BuiltinBear(builtin_print_func));
 
 }

@@ -17,6 +17,7 @@ set(LIBSRC ${BEARLANG_SOURCE} ${SEXP_SOURCE})
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/sexp-cpp/include)
 
 add_library(bearlang SHARED ${LIBSRC})
+add_library(bearlangrt STATIC ${LIBSRC})
 
 add_executable(bearlangi ${BEARLANGI_SOURCE})
 target_link_libraries(bearlangi bearlang readline)

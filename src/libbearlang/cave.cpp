@@ -100,6 +100,12 @@ sexp::Value BearCave::eval_sexp(sexp::Value exp) {
               if(exp_car.is_symbol()) {
                   std::string car_sym_name = exp_car.as_string();
                   if(car_sym_name.compare("'")==0) return exp.get_cdr();
+                  if(car_sym_name.compare("eval")==0) {
+                     return eval_sexp(exp_cdr).get_car();
+                  }
+                  if(car_sym_name.compare("loop")==0) {
+                     for(;;) eval_sexp(exp_cdr);
+                  }
 		  if(car_sym_name.compare("=")==0) {
                      sexp::Value setparams = exp.get_cdr();
                      std::string new_sym_name = setparams.get_car().as_string();
