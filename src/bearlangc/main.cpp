@@ -47,7 +47,7 @@ std::string val_to_cpp_str(sexp::Value v) {
                      return "sexp::Value::symbol(\"" + v.as_string()+"\")";
                 break;
                 case sexp::Value::Type::TYPE_CONS:
-                     return "sexp::Value::cons(\n" + val_to_cpp_str(v.get_car()) + "," + val_to_cpp_str(v.get_cdr()) + ")\n";
+                     return "sexp::Value::cons(" + val_to_cpp_str(v.get_car()) + "," + val_to_cpp_str(v.get_cdr()) + ")";
                 break;
      }
 }
@@ -56,7 +56,7 @@ void handle_expr(std::string exp, std::string from_file, int line_no) {
      try {
          sexp::Value v = p.parse_string(exp);
 
-         cppfile << "root_cave.eval_sexp(" << val_to_cpp_str(v) << ");" << endl;
+         cppfile << "root_cave.eval_sexp(" << val_to_cpp_str(v) << ");"; 
 
      } catch(TypeError& e) {
          cerr << "Error when parsing " << from_file << ":" << line_no+e.get_line() << ": ";

@@ -1,0 +1,8 @@
+(print "Welcome to BearLang!\n\n")
+
+(print "There is no documentation, see the source code\n\n")
+
+; yes, this is a basic REPL implemented in BearLang itself - it is not intended for actual usage (for that use the binary bearlangi)
+; instead, this is here as an example
+
+(loop (print (eval (reade)) "\n"))
