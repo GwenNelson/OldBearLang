@@ -5,8 +5,11 @@ This is a lisp-like language built in C++.
 # compiling
 
 mkdir build
+
 cd build
+
 cmake ..
+
 make
 
 # running
