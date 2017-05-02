@@ -13,8 +13,8 @@
 (print "This s-expression for example covers"
        " multiple lines but should print out just one line\n")
 
-(print "Since every lisp needs a fac() function, one is tested here\n"
-       "fac(5)=" (fac 5) "\n")
+(print "Since every lisp needs a factorial function, one is tested here\n"
+       "\(fac 5\)=" (fac 5) "\n")
 
 (print "We have a car that automatically figures out if the first param is a cons or not, for convenience\n")
 
@@ -23,3 +23,7 @@
 
 (print "The same goes for cdr: \(cdr 1 2 3\) = "(cdr 1 2 3) "\n"
         "                     \(cdr (3 4 5\)\) = "(cdr (3 4 5)) "\n")
+
+(print "The + operator works for both strings and integers:\n"
+       "e.g \(+ 2 2\) = " (+ 2 2) "\n"
+       "    \(+ \"two \" \"strings\") = \"" (+ "two " "strings") "\"\n")

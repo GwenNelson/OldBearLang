@@ -28,11 +28,19 @@ sexp::Value BuiltinBear::eval(BearCave* cave, sexp::Value cdr) {
 
 
 sexp::Value builtin_add_oper(BearCave* cave, sexp::Value cdr) {
-    int retval = 0;
-    for(sexp::ListIterator it(cdr); it != sexp::ListIterator(); ++it) {
-        retval += it->as_int();
+    if(cdr.get_car().is_string()) {
+      std::string retvals;
+      for(sexp::ListIterator it(cdr); it != sexp::ListIterator(); ++it) {
+          retvals += it->as_string();
+      }
+      return sexp::Value::string(retvals);      
+    } else {
+      int retvali = 0;
+      for(sexp::ListIterator it(cdr); it != sexp::ListIterator(); ++it) {
+          retvali += it->as_int();
+      }
+      return sexp::Value::integer(retvali);
     }
-    return sexp::Value::integer(retval);
 }
 
 sexp::Value builtin_minus_oper(BearCave* cave, sexp::Value cdr) {
