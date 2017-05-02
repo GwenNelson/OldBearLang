@@ -1,5 +1,19 @@
 (fun hello (name)
      (print "Hello, " name "\n"))
 
+(fun fac (n)
+      (if (< n 1)
+            1 
+            (* n (fac (- n 1)))))
+
 (hello "BearLang user")
 
+(print "Testing out some fun stuff\n")
+
+(print "This s-expression for example covers"
+       " multiple lines but should print out just one line\n")
+
+(print "Since every lisp needs a fac() function, one is tested here\n"
+       "fac(5)=" (fac 5) "\n")
+
+(fac 0)

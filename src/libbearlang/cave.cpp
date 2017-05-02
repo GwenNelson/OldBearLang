@@ -63,9 +63,9 @@ sexp::Value BearCave::eval_func(std::string func_name, sexp::Value cdr) {
         throw std::runtime_error("eval_func() called on non-function!");
      }
      if(symbols.count(func_name)==1) {
-        return this->symbols[func_name]->eval(this,this->eval_sexp(cdr));
+        return this->symbols[func_name]->eval(this,eval_sexp(cdr));
      } else {
-        return this->parent->eval_func(func_name,this->eval_sexp(cdr));
+        return this->parent->eval_func(func_name,eval_sexp(cdr));
      }
 }
 
@@ -95,12 +95,24 @@ sexp::Value BearCave::eval_sexp(sexp::Value exp) {
          break;
          case sexp::Value::Type::TYPE_CONS:{
               sexp::Value exp_car = exp.get_car();
+              sexp::Value exp_cdr = exp.get_cdr();
 
               if(exp_car.is_symbol()) {
                   std::string car_sym_name = exp_car.as_string();
                   if(car_sym_name.compare("'")==0) return exp.get_cdr();
-		  if(car_sym_name.compare("fn")==0) {
+		  if(car_sym_name.compare("=")==0) {
+                     sexp::Value setparams = exp.get_cdr();
+                     std::string new_sym_name = setparams.get_car().as_string();
+                     sexp::Value new_sym_val  = eval_sexp(exp.get_cdr().get_cdr().get_car());
+                     this->write_sym(new_sym_name,new_sym_val);
+                     return sexp::Value::nil();
 		  }
+                  if(car_sym_name.compare("if")==0) {
+                     sexp::Value ifparams = exp.get_cdr();
+                     sexp::Value ifcond   = eval_sexp(ifparams.get_car());
+                     if(ifcond.as_bool()) return eval_sexp(ifparams.get_cdr().get_car());
+                     return eval_sexp(ifparams.get_cdr().get_cdr().get_car());
+                  }
                   if(car_sym_name.compare("fun")==0) {
                      sexp::Value func        = exp.get_cdr();
                      std::string func_name   = func.get_car().as_string();
@@ -111,9 +123,9 @@ sexp::Value BearCave::eval_sexp(sexp::Value exp) {
                   if(!sym_exists(car_sym_name)) throw std::runtime_error("Symbol " + car_sym_name + " not found in bear cave!");
 
                   if(sym_is_func(car_sym_name)) {
-                     return eval_func(car_sym_name, exp.get_cdr());
+                     return eval_func(car_sym_name, eval_sexp(exp.get_cdr()));
                   } else {
-                     return read_sym(car_sym_name);
+                     return sexp::Value::cons(read_sym(car_sym_name),sexp::Value(exp_cdr));
                   }
               } else {
                   sexp::Value retval = sexp::Value::array();
