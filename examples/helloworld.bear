@@ -16,3 +16,10 @@
 (print "Since every lisp needs a fac() function, one is tested here\n"
        "fac(5)=" (fac 5) "\n")
 
+(print "We have a car that automatically figures out if the first param is a cons or not, for convenience\n")
+
+(print "For example: \(car 1 2 3\) = "(car 1 2 3) "\n"
+        "           \(car (3 4 5\)\) = "(car (3 4 5)) "\n")
+
+(print "The same goes for cdr: \(cdr 1 2 3\) = "(cdr 1 2 3) "\n"
+        "                     \(cdr (3 4 5\)\) = "(cdr (3 4 5)) "\n")

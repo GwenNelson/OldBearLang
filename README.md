@@ -16,7 +16,7 @@ The function body goes in the ... above and is just a list of statements, see th
 
 Lists are evaluated immediately unless quoted by making the first symbol in the list a quote character.
 
-Builtins are provided in native code in builtin_bear.cpp - read that file for instructions
+Builtins are provided in native code in builtin_bear.cpp and in the eval function in cave.cpp - read those files for instructions
 
 # compiling
 

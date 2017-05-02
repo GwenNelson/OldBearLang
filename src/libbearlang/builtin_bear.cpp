@@ -65,6 +65,11 @@ sexp::Value builtin_lt_oper(BearCave* cave, sexp::Value cdr) {
     return sexp::Value::boolean(retval);
 }
 
+sexp::Value builtin_gt_oper(BearCave* cave, sexp::Value cdr) {
+    bool retval = cdr.get_car().as_int() > cdr.get_cdr().get_car().as_int();
+
+    return sexp::Value::boolean(retval);
+}
 
 // evaluates every expression in the cdr and then returns the last value
 // best used with ' to pass in the cdr
@@ -75,7 +80,6 @@ sexp::Value builtin_do_oper(BearCave* cave, sexp::Value cdr) {
     }
     return retval;
 }
-
 
 sexp::Value builtin_print_func(BearCave* cave, sexp::Value cdr) {
     for(sexp::ListIterator it(cdr); it != sexp::ListIterator(); ++it) {
@@ -94,6 +98,7 @@ void add_builtins(BearCave* c) {
      c->write_sym("*",    (BearVal*)new BuiltinBear(builtin_multiply_oper));
      c->write_sym("/",    (BearVal*)new BuiltinBear(builtin_divide_oper));
      c->write_sym("<",    (BearVal*)new BuiltinBear(builtin_lt_oper));
+     c->write_sym(">",    (BearVal*)new BuiltinBear(builtin_gt_oper));
      c->write_sym("do",   (BearVal*)new BuiltinBear(builtin_do_oper));
      c->write_sym("eq",   (BearVal*)new BuiltinBear(builtin_eq_oper));
      c->write_sym("print",(BearVal*)new BuiltinBear(builtin_print_func));

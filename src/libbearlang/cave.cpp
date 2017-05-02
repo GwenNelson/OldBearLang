@@ -113,6 +113,14 @@ sexp::Value BearCave::eval_sexp(sexp::Value exp) {
                      if(ifcond.as_bool()) return eval_sexp(ifparams.get_cdr().get_car());
                      return eval_sexp(ifparams.get_cdr().get_cdr().get_car());
                   }
+                  if(car_sym_name.compare("car")==0) {
+                     if(exp_cdr.get_car().is_cons()) return exp_cdr.get_car().get_car();
+                     return exp_cdr.get_car();
+                  }
+                  if(car_sym_name.compare("cdr")==0) {
+                     if(exp_cdr.get_car().is_cons()) return exp_cdr.get_car().get_cdr();
+                     return exp_cdr.get_cdr();
+                  }
                   if(car_sym_name.compare("fun")==0) {
                      sexp::Value func        = exp.get_cdr();
                      std::string func_name   = func.get_car().as_string();
