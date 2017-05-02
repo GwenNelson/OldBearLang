@@ -99,6 +99,8 @@ sexp::Value BearCave::eval_sexp(sexp::Value exp) {
               if(exp_car.is_symbol()) {
                   std::string car_sym_name = exp_car.as_string();
                   if(car_sym_name.compare("'")==0) return exp.get_cdr();
+		  if(car_sym_name.compare("fn")==0) {
+		  }
                   if(car_sym_name.compare("fun")==0) {
                      sexp::Value func        = exp.get_cdr();
                      std::string func_name   = func.get_car().as_string();
@@ -109,7 +111,7 @@ sexp::Value BearCave::eval_sexp(sexp::Value exp) {
                   if(!sym_exists(car_sym_name)) throw std::runtime_error("Symbol " + car_sym_name + " not found in bear cave!");
 
                   if(sym_is_func(car_sym_name)) {
-                     return eval_func(car_sym_name, eval_sexp(exp.get_cdr()));
+                     return eval_func(car_sym_name, exp.get_cdr());
                   } else {
                      return read_sym(car_sym_name);
                   }

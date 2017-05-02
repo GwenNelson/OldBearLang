@@ -21,7 +21,7 @@ BuiltinBear::BuiltinBear(bear_native_func_t _func) {
 
 sexp::Value BuiltinBear::eval(BearCave* cave, sexp::Value cdr) {
     BearCave func_closure(cave); // create a new cave to use as function closure
-    return this->func(&func_closure,cave->eval_sexp(cdr));
+    return this->func(&func_closure,cdr);
 }
 
 // BUILTIN FUNCTIONS START HERE
@@ -32,6 +32,53 @@ sexp::Value builtin_add_oper(BearCave* cave, sexp::Value cdr) {
         retval += it->as_int();
     }
     return sexp::Value::integer(retval);
+}
+
+sexp::Value builtin_minus_oper(BearCave* cave, sexp::Value cdr) {
+    int retval = cdr.get_car().as_int() - cdr.get_cdr().get_car().as_int();
+
+    return sexp::Value::integer(retval);
+}
+
+sexp::Value builtin_multiply_oper(BearCave* cave, sexp::Value cdr) {
+    int retval = cdr.get_car().as_int() * cdr.get_cdr().get_car().as_int();
+
+    return sexp::Value::integer(retval);
+}
+
+sexp::Value builtin_divide_oper(BearCave* cave, sexp::Value cdr) {
+    int retval = cdr.get_car().as_int() / cdr.get_cdr().get_car().as_int();
+
+    return sexp::Value::integer(retval);
+}
+
+sexp::Value builtin_eq_oper(BearCave* cave, sexp::Value cdr) {
+    bool retval = cdr.get_car() == cdr.get_cdr().get_car();
+
+    return sexp::Value::boolean(retval);
+}
+
+// evaluates every expression in the cdr and then returns the last value
+// best used with ' to pass in the cdr
+sexp::Value builtin_do_oper(BearCave* cave, sexp::Value cdr) {
+    sexp::Value retval = sexp::Value::nil();
+    for(sexp::ListIterator it(cdr); it != sexp::ListIterator(); ++it) {
+        retval = cave->eval_sexp(*it);
+    }
+    return retval;
+}
+
+// format: (if condition then else)
+// e.g
+//  (if (eq 2 2)
+//       (' print "2 is 2, the world makes sense!\n") ; then
+//       (' print "wtf? 2 is not 2?\n"))              ; else
+// probably best used with the do operator, the then and else params should also be quoted
+sexp::Value builtin_if_oper(BearCave* cave, sexp::Value cdr) {
+    std::cout << cdr.get_car() << std::endl;
+    bool cond_true = cave->eval_sexp(cdr.get_car()).as_bool();
+    if(cond_true) return cave->eval_sexp(cdr.get_cdr().get_car());
+    return cave->eval_sexp(cdr.get_cdr().get_cdr());
 }
 
 sexp::Value builtin_print_func(BearCave* cave, sexp::Value cdr) {
@@ -47,7 +94,14 @@ sexp::Value builtin_print_func(BearCave* cave, sexp::Value cdr) {
 
 void add_builtins(BearCave* c) {
      c->write_sym("+",    (BearVal*)new BuiltinBear(builtin_add_oper));
+     c->write_sym("-",    (BearVal*)new BuiltinBear(builtin_minus_oper));
+     c->write_sym("*",    (BearVal*)new BuiltinBear(builtin_multiply_oper));
+     c->write_sym("/",    (BearVal*)new BuiltinBear(builtin_divide_oper));
+     c->write_sym("do",   (BearVal*)new BuiltinBear(builtin_do_oper));
+     c->write_sym("if",   (BearVal*)new BuiltinBear(builtin_if_oper));
+     c->write_sym("eq",   (BearVal*)new BuiltinBear(builtin_eq_oper));
      c->write_sym("print",(BearVal*)new BuiltinBear(builtin_print_func));
+
 }
 
 };
