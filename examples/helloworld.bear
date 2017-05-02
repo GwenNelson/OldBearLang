@@ -16,4 +16,3 @@
 (print "Since every lisp needs a fac() function, one is tested here\n"
        "fac(5)=" (fac 5) "\n")
 
-(fac 0)
