@@ -6,7 +6,7 @@
 
 #include <mpc.h>
 
-#include <bearlang.h>
+#include <bearlang/bearlang.h>
 
 bl_val_t* repl_env;
 
