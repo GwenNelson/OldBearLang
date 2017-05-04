@@ -14,7 +14,7 @@ bl_val_t* bl_env_read(bl_val_t* env, bl_val_t* sym) {
       while(c != NULL) {
          if(c != NULL) {
             if(bl_symbol_eq(sym,bl_list_car(bl_list_car(c)))) {
-               return bl_list_car(bl_list_cdr(bl_list_car(c)));
+               return bl_val_ref(bl_list_car(bl_list_cdr(bl_list_car(c))));
             }
          }
          c = bl_list_cdr(c);
@@ -25,7 +25,7 @@ bl_val_t* bl_env_read(bl_val_t* env, bl_val_t* sym) {
 
 bl_val_t* bl_env_set(bl_val_t* env, bl_val_t* k, bl_val_t* v) {
        // TODO - look for already existing value here and throw an error
-       bl_list_append(env->env_contents,bl_mk_cons(k,bl_mk_cons(v,NULL)));
+       bl_list_append(env->env_contents,bl_mk_cons(bl_val_ref(k),bl_val_ref(bl_mk_cons(bl_val_ref(v),NULL))));
        return v;      
 }
 
