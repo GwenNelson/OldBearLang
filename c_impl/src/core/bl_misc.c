@@ -49,3 +49,13 @@ void bl_dump_expr(bl_val_t* expr) {
       }
 
 }
+
+bl_val_t* bl_init_env() {
+    bl_val_t* retval = bl_mk_env(NULL);
+    bl_env_set(retval,bl_mk_symbol("+"),bl_mk_fn_native(bl_builtin_add));
+
+    bl_env_set(retval,bl_mk_symbol("="),bl_mk_oper_native(bl_builtin_set));
+    bl_env_set(retval,bl_mk_symbol("fn"),bl_mk_oper_native(bl_builtin_fn));
+
+    return retval;
+}

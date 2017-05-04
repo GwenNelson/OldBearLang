@@ -65,4 +65,5 @@ bl_val_t* bl_eval_expr(bl_val_t* env, bl_val_t* expr);                          
 // ==== TOOLS AND MISC ====
 // implemented in bl_misc.c
 // misc stuff that doesn't fit elsewhere
+bl_val_t* bl_init_env();           // returns a default sane environment intended for use as the root env
 void bl_dump_expr(bl_val_t* expr); // dumps an expression to stdout
