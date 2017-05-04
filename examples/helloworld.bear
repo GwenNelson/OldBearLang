@@ -1,3 +1,5 @@
+#!/usr/bin/env bearlangi
+
 (fun hello (name)
      (print "Hello, " name "\n"))
 

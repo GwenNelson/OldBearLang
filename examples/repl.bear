@@ -1,3 +1,4 @@
+#!/usr/bin/env bearlangi
 (print "Welcome to BearLang!\n\n")
 
 (print "There is no documentation, see the source code\n\n")

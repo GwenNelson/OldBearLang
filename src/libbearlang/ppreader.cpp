@@ -68,6 +68,10 @@ PPReader::Line PPReader::read() {
         cur_line_no++;
         return this->read();
     }
+    if(boost::starts_with(buf,"#!")) {
+        cur_line_no++;
+        return this->read();
+    }
     if(buf.find(";") != std::string::npos) {
        buf = buf.substr(0,buf.find(";"));
     }
