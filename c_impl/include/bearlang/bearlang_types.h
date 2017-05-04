@@ -8,7 +8,6 @@ typedef enum bl_val_type_t {
     VAL_TYPE_INT,
     VAL_TYPE_FUNC_BL,
     VAL_TYPE_FUNC_NATIVE,
-    VAL_TYPE_OPER_NATIVE,
     VAL_TYPE_ENV,
 } bl_val_type_t;
 
@@ -34,7 +33,7 @@ typedef struct bl_val_t {
     bl_val_t* fn_args; // list of symbols defining the argument symbols
     bl_val_t* fn_body;      // expression to evaluate when function is called and native_func is NULL
 
-    // for native code functions, this is also used by native code operators
+    // for native code functions
     bl_native_fn_t fn_native_code;
 
     // for environments

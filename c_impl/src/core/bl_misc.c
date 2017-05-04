@@ -38,10 +38,7 @@ void bl_dump_expr(bl_val_t* expr) {
                printf("<function>"); //TODO - make this print out full definition
           break;
           case VAL_TYPE_FUNC_NATIVE:
-               printf("<function-native>"); // as above, but make it contain a memory address or similar
-          break;
-          case VAL_TYPE_OPER_NATIVE:
-               printf("<oper-native>");
+               printf("<function>"); // as above, but make it contain a memory address or similar
           break;
           case VAL_TYPE_ENV:
                printf("<env>");

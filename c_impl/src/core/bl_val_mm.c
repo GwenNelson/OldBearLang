@@ -10,6 +10,7 @@ bl_val_t* bl_val_alloc() {
 bl_val_t* bl_val_free(bl_val_t* v) {
        if(v==NULL) return;
        v->refs--;
+       if(v->refs > 0) return;
        switch(v->type) {
           case VAL_TYPE_NIL:
           break;
@@ -30,8 +31,7 @@ bl_val_t* bl_val_free(bl_val_t* v) {
                bl_val_free(v->fn_body);
           break;
           case VAL_TYPE_FUNC_NATIVE:
-          break;
-          case VAL_TYPE_OPER_NATIVE:
+               bl_val_free(v->fn_args);
           break;
           case VAL_TYPE_ENV:
                bl_val_free(v->env_parent);
@@ -63,9 +63,6 @@ bl_val_t* bl_val_copy(bl_val_t* v) {
           break;
           case VAL_TYPE_FUNC_NATIVE:
                return bl_mk_fn_native(v->fn_native_code);
-          break;
-          case VAL_TYPE_OPER_NATIVE:
-               return bl_mk_oper_native(v->fn_native_code);
           break;
           case VAL_TYPE_ENV:{
                bl_val_t* retval = bl_mk_env(v->env_parent);
