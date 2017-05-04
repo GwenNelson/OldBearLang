@@ -19,13 +19,13 @@ bl_val_t* bl_eval_expr(bl_val_t* env, bl_val_t* expr) {
                return NULL;
           break;
           case VAL_TYPE_STR:
-               return bl_val_ref(expr);
+               return expr;
           break;
           case VAL_TYPE_INT:
-               return bl_val_ref(expr);
+               return expr;
           break;
           case VAL_TYPE_SYMBOL:
-               return bl_val_ref(bl_eval_symbol(env,expr));
+               return bl_eval_symbol(env,expr);
           break;
           case VAL_TYPE_CONS:
                if(bl_list_car(expr) == NULL) return NULL;
@@ -33,21 +33,21 @@ bl_val_t* bl_eval_expr(bl_val_t* env, bl_val_t* expr) {
                   bl_val_t* sym_val = bl_eval_symbol(env,bl_list_car(expr));
                   if(sym_val != NULL) {
                      if(sym_val->type == VAL_TYPE_FUNC_NATIVE) {
-                        return bl_val_ref(bl_eval_native_func(env,sym_val,bl_eval_expr(env,bl_list_cdr(expr))));
+                        return bl_eval_native_func(env,sym_val,bl_eval_expr(env,bl_list_cdr(expr)));
                      }
                   }
                } else {
-                 return bl_val_ref(bl_mk_cons(bl_eval_expr(env,expr->car),bl_eval_expr(env,expr->cdr)));
+                 return bl_mk_cons(bl_eval_expr(env,expr->car),bl_eval_expr(env,expr->cdr));
                }
           break;
           case VAL_TYPE_FUNC_BL:
-               return bl_val_ref(expr);
+               return expr;
           break;
           case VAL_TYPE_FUNC_NATIVE:
-               return bl_val_ref(expr);
+               return expr;
           break;
           case VAL_TYPE_ENV:
-               return bl_val_ref(expr);
+               return expr;
           break;
       }
 }
