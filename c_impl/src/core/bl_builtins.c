@@ -11,3 +11,10 @@ bl_val_t* bl_builtin_add(bl_val_t* env, bl_val_t* args) {
       }
       return bl_mk_int(retval);
 }
+
+bl_val_t* bl_builtin_set(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* k = bl_val_copy(bl_list_car(args));
+      bl_val_t* v = bl_val_copy(bl_list_car(bl_list_cdr(args)));
+      bl_env_set(env,k,v);
+      return v;
+}

@@ -37,6 +37,12 @@ bl_val_t* bl_mk_fn_native(bl_native_fn_t f) {
        return retval;
 }
 
+bl_val_t* bl_mk_oper_native(bl_native_fn_t f) {
+       bl_val_t* retval = bl_val_alloc();
+       retval->type = VAL_TYPE_OPER_NATIVE;
+       retval->fn_native_code = f;
+       return retval;
+}
 
 bl_val_t* bl_mk_fn_bl(bl_val_t* args, bl_val_t* body) {
        bl_val_t* retval = bl_val_alloc();

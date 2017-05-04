@@ -8,6 +8,7 @@ typedef enum bl_val_type_t {
     VAL_TYPE_INT,
     VAL_TYPE_FUNC_BL,
     VAL_TYPE_FUNC_NATIVE,
+    VAL_TYPE_OPER_NATIVE,
     VAL_TYPE_ENV,
 } bl_val_type_t;
 

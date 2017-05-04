@@ -71,6 +71,7 @@ int main(int argc, char** argv) {
     repl_env = bl_mk_env(NULL);
 
     bl_env_set(repl_env,bl_mk_symbol("+"),bl_mk_fn_native(bl_builtin_add));
+    bl_env_set(repl_env,bl_mk_symbol("="),bl_mk_oper_native(bl_builtin_set));
 
     for(;;) {
        char* input = readline("> ");
