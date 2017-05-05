@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #include <readline/readline.h>
 
 #include <mpc.h>
@@ -28,16 +33,23 @@ bl_val_t* parse_ast(mpc_ast_t *t) {
        return NULL;
 }
 
-void handle_line(char* l) {
-     char* copy = strdup(l);
+mpc_parser_t* mpc_Number;
+mpc_parser_t* mpc_Symbol;
+mpc_parser_t* mpc_String;
+mpc_parser_t* mpc_Sexpr;
+mpc_parser_t* mpc_Expr;
+mpc_parser_t* mpc_Lispy;
 
-     mpc_parser_t* Number = mpc_new("number");
-     mpc_parser_t* Symbol = mpc_new("symbol");
-     mpc_parser_t* Sexpr  = mpc_new("sexpr");
-     mpc_parser_t* String = mpc_new("string");
-     mpc_parser_t* Expr   = mpc_new("expr");
-     mpc_parser_t* Lispy  = mpc_new("lispy");
 
+void init_mpc() {
+     mpc_Number = mpc_new("number");
+     mpc_Symbol = mpc_new("symbol");
+     mpc_Sexpr  = mpc_new("sexpr");
+     mpc_String = mpc_new("string");
+     mpc_Expr   = mpc_new("expr");
+     mpc_Lispy  = mpc_new("lispy");
+
+    
      mpca_lang(MPCA_LANG_DEFAULT,
       "                                          \
         number : /-?[0-9]+/ ;                    \
@@ -46,11 +58,19 @@ void handle_line(char* l) {
         string : /\"(\\\\.|[^\"])*\"/ ;         \
         expr   : <number> | <string> | <symbol> | <sexpr> ; \
         lispy  : /^/ <expr>* /$/ ;               \
-      ", Number, Symbol, Sexpr, String, Expr, Lispy);
+      ", mpc_Number, mpc_Symbol, mpc_Sexpr, mpc_String, mpc_Expr, mpc_Lispy);
+
+}
+
+void handle_line(char* l) {
+     printf("\n");
+     if(!l) exit(0);
+     add_history(l);
+     char* copy = strdup(l);
 
 
     mpc_result_t r;
-    if (mpc_parse("<stdin>", copy, Lispy, &r)) {
+    if (mpc_parse("<stdin>", copy, mpc_Lispy, &r)) {
       /* On success print and delete the AST */
 //      mpc_ast_print(r.output);
       
@@ -64,22 +84,48 @@ void handle_line(char* l) {
     } else {
       mpc_err_print(r.error);
       mpc_err_delete(r.error);
-    
+      rl_replace_line(l,0);    
     }
-
+//     free(l);
      free(copy);
 }
 
-int main(int argc, char** argv) {
-    repl_env = bl_init_env();
 
-    while(!feof(stdin)) {
-       char* input = readline("> ");
-       if(input != NULL) {
-          handle_line(input);
-          free(input);
-       } else {
-          return 0;
-       }
-    }
+int handle_nl() {
+    char* copy = strdup(rl_line_buffer);
+    int retval = 0;
+     mpc_result_t r;
+     if(mpc_parse("<stdin>",copy,mpc_Lispy,&r)) {
+
+        mpc_ast_delete(r.output);
+        rl_done = 1;
+     } else {
+        rl_insert_text(" \n");
+        rl_insert_text("           ");
+        retval = 0;
+     }
+    free(copy);
+    return retval;
+}
+
+
+void do_reads() {
+     char c;
+     rl_variable_bind("blink-matching-paren","on");
+     rl_callback_handler_install("BearLang> ", &handle_line);
+     rl_bind_key ('\r', &handle_nl);
+
+
+     while (!feof(stdin)) {
+        read(STDIN_FILENO, &c, 1);
+        if(! rl_stuff_char(c)) exit(1);
+        rl_callback_read_char();
+     }
+}
+
+
+int main(int argc, char** argv) {
+    repl_env  = bl_init_env();
+    init_mpc();
+    do_reads();
 }
