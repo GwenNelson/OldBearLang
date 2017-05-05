@@ -56,28 +56,33 @@ void bl_dump_expr(bl_val_t* expr) {
 static bl_val_t default_env_contents_add_fn    = BL_STATIC_NATIVEFUNC(bl_builtin_add);
 static bl_val_t default_env_contents_set_oper  = BL_STATIC_NATIVEOPER(bl_builtin_set);
 
-static bl_val_t default_env_contents_items_vals[];
-static bl_val_t default_env_contents_items_vals[] = {
-    BL_STATIC_CONS(&default_env_contents_add_fn,NULL),
-    BL_STATIC_CONS(&default_env_contents_set_oper,NULL),
-};
+#define DEFAULT_ENV_CONTENTS \
+        X("+",default_env_contents_add_fn,default_env_contents,0) \
+        X("=",default_env_contents_set_oper,default_env_contents,1)
 
-static bl_val_t default_env_contents_items_keys[];
-static bl_val_t default_env_contents_items_keys[] = {
-    BL_STATIC_SYM("+"),
-    BL_STATIC_SYM("="),
-};
+BL_ASSOC_VAL_START(default_env_contents)
+#define X BL_ASSOC_VAL_ENTRY
+DEFAULT_ENV_CONTENTS
+BL_ASSOC_VAL_END
+#undef X
 
-static bl_val_t default_env_contents_items[];
-static bl_val_t default_env_contents_items[] = {
-    BL_STATIC_ASSOC_ENTRY(default_env_contents_items,0),
-    BL_STATIC_ASSOC_ENTRY(default_env_contents_items,1),
-};
+BL_ASSOC_KEY_START(default_env_contents)
+#define X BL_ASSOC_KEY_ENTRY
+DEFAULT_ENV_CONTENTS
+BL_ASSOC_KEY_END
+#undef X
+
+
+BL_ASSOC_ITEMS_START(default_env_contents)
+#define X BL_ASSOC_ITEMS_ENTRY
+DEFAULT_ENV_CONTENTS
+BL_ASSOC_ITEMS_END
+#undef X
 
 static bl_val_t default_env_contents_list[];
 static bl_val_t default_env_contents_list[] = {
-    BL_STATIC_CONS(&default_env_contents_items[0],&default_env_contents_list[1]),
-    BL_STATIC_CONS(&default_env_contents_items[1],NULL),
+    BL_STATIC_LIST_CONS(default_env_contents,0),
+    BL_STATIC_LIST_CONS_LAST(default_env_contents,1)
 };
 
 static bl_val_t default_env = {
