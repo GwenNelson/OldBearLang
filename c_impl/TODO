@@ -1,5 +1,8 @@
 Implement a NICE s-expression reader using readline
+   Look into making this work over sockets and other nice things
 Implement simple console output (print) and fun operator for defining functions
 Implement reading files from command line
+Rework environment to use a primitive hashtable type
 Implement loading modules
+Implement loading symbols via dlopen() and binding into environments
 
