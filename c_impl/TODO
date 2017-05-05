@@ -1,0 +1,5 @@
+Implement a NICE s-expression reader using readline
+Implement simple console output (print) and fun operator for defining functions
+Implement reading files from command line
+Implement loading modules
+
