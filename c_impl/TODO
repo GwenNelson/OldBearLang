@@ -1,8 +1,36 @@
 Implement a NICE s-expression reader using readline
    Look into making this work over sockets and other nice things
+Add string support to builtins
 Implement simple console output (print) and fun operator for defining functions
+Implement booleans
+Implement control-flow operators
+   do operator (do expr expr expr ...)
+      simply evaluates expressions and returns the result of the last one
+   if operator (if cond then-action else-action)
+      if cond evaluates to true, evaluate then-action, otherwise evaluate else-action (if it exists)
+   eq operator (eq a b)
+      returns boolean true if the 2 params both evaluate to the same value
+   switch operator (switch val (case expr) (case expr) (case expr) ...)
+      if eval(val) is equal to eval(case), then expr is evaluated
+   loop operator (loop expr expr expr ...)
+      just evaluates the expressions forever
+
 Implement reading files from command line
 Rework environment to use a primitive hashtable type
+
+Implement evaluating symbols within environments/namespaces/closures
+   eval-with operator to eval arbitrary expression inside a specified environment/namespace/closure/whatever
+      (eval-with env expr)
+   :: operator to reference symbols within a namespace
+   e.g
+      to evaluate the value of foo::bar first evaluate the value of foo (which should be an environment) within the current environment to get environment foo
+      then simply evaluate bar inside of foo
+      
+
 Implement loading modules
+   (load module-file)
+   read from filename (or FD) specified by module-file, evaluate in a new environment, return that new environment
+
 Implement loading symbols via dlopen() and binding into environments
 
+Extend :: and friends to automatically use imported files
