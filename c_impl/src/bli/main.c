@@ -84,9 +84,7 @@ void handle_line(char* l) {
     } else {
       mpc_err_print(r.error);
       mpc_err_delete(r.error);
-      rl_replace_line(l,0);    
     }
-//     free(l);
      free(copy);
 }
 
