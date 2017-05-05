@@ -50,68 +50,34 @@ void bl_dump_expr(bl_val_t* expr) {
 
 }
 
-static bl_val_t default_env_add_symbol = {
-    .alloc_type   = VAL_ALLOC_STATIC,
-    .type         = VAL_TYPE_SYMBOL,
-    .sym_name     = "+",
+#include <bearlang/bearlang_static_macros.h>
+
+
+static bl_val_t default_env_contents_add_fn    = BL_STATIC_NATIVEFUNC(bl_builtin_add);
+static bl_val_t default_env_contents_set_oper  = BL_STATIC_NATIVEOPER(bl_builtin_set);
+
+static bl_val_t default_env_contents_items_vals[];
+static bl_val_t default_env_contents_items_vals[] = {
+    BL_STATIC_CONS(&default_env_contents_add_fn,NULL),
+    BL_STATIC_CONS(&default_env_contents_set_oper,NULL),
 };
 
-static bl_val_t default_env_set_symbol = {
-    .alloc_type   = VAL_ALLOC_STATIC,
-    .type         = VAL_TYPE_SYMBOL,
-    .sym_name     = "=",
+static bl_val_t default_env_contents_items_keys[];
+static bl_val_t default_env_contents_items_keys[] = {
+    BL_STATIC_SYM("+"),
+    BL_STATIC_SYM("="),
 };
 
-static bl_val_t default_env_contents_add_fn = {
-    .alloc_type     = VAL_ALLOC_STATIC,
-    .type           = VAL_TYPE_FUNC_NATIVE,
-    .fn_native_code = bl_builtin_add,
-};
-
-static bl_val_t default_env_contents_set_oper = {
-    .alloc_type     = VAL_ALLOC_STATIC,
-    .type           = VAL_TYPE_OPER_NATIVE,
-    .fn_native_code = bl_builtin_set,
-};
-
-static bl_val_t default_env_contents_add_fn_cons = {
-    .alloc_type     = VAL_ALLOC_STATIC,
-    .type           = VAL_TYPE_CONS,
-    .car            = &default_env_contents_add_fn,
-    .cdr            = NULL,
-};
-
-static bl_val_t default_env_contents_set_oper_cons = {
-    .alloc_type    = VAL_ALLOC_STATIC,
-    .type          = VAL_TYPE_CONS,
-    .car           = &default_env_contents_set_oper,
-    .cdr           = NULL,
-};
-
-static bl_val_t default_env_contents_add_cons = {
-    .alloc_type   = VAL_ALLOC_STATIC,
-    .type         = VAL_TYPE_CONS,
-    .car          = &default_env_add_symbol,
-    .cdr          = &default_env_contents_add_fn_cons,
-};
-
-static bl_val_t default_env_contents_set_cons = {
-    .alloc_type   = VAL_ALLOC_STATIC,
-    .type         = VAL_TYPE_CONS,
-    .car          = &default_env_set_symbol,
-    .cdr          = &default_env_contents_set_oper_cons,
+static bl_val_t default_env_contents_items[];
+static bl_val_t default_env_contents_items[] = {
+    BL_STATIC_ASSOC_ENTRY(default_env_contents_items,0),
+    BL_STATIC_ASSOC_ENTRY(default_env_contents_items,1),
 };
 
 static bl_val_t default_env_contents_list[];
 static bl_val_t default_env_contents_list[] = {
-    { .alloc_type   = VAL_ALLOC_STATIC,
-      .type         = VAL_TYPE_CONS,
-      .car          = &default_env_contents_add_cons,
-      .cdr          = &default_env_contents_list[1],},
-    { .alloc_type   = VAL_ALLOC_STATIC,
-      .type         = VAL_TYPE_CONS,
-      .car          = &default_env_contents_set_cons,
-      .cdr          = NULL,},
+    BL_STATIC_CONS(&default_env_contents_items[0],&default_env_contents_list[1]),
+    BL_STATIC_CONS(&default_env_contents_items[1],NULL),
 };
 
 static bl_val_t default_env = {
