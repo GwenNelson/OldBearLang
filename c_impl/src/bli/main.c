@@ -62,11 +62,15 @@ void init_mpc() {
 
 }
 
+int sexp_ready;
+char* last_line = NULL;
 void handle_line(char* l) {
      printf("\n");
      if(!l) exit(0);
+     if(sexp_ready != 1) { rl_insert_text(l); free(l); return; }
      add_history(l);
      char* copy = strdup(l);
+     free(l);
 
 
     mpc_result_t r;
@@ -97,20 +101,38 @@ int handle_nl() {
 
         mpc_ast_delete(r.output);
         rl_done = 1;
+        sexp_ready = 1;
+        rl_set_prompt("BearLang> ");
      } else {
+        rl_set_prompt("        > ");
+
+        last_line = strdup(rl_line_buffer);
         rl_insert_text(" \n");
-        rl_insert_text("           ");
+        rl_done = 1;
+        sexp_ready = 0;
+//        rl_insert_text("           ");
         retval = 0;
      }
     free(copy);
     return retval;
 }
 
+int pre_input_hack() { 
+    if(!sexp_ready) {
+       if(last_line != NULL) {
+          rl_insert_text(last_line);
+          rl_insert_text(" \n          ");
+          free(last_line);
+          last_line = NULL;
+       }
+    }
+}
 
 void do_reads() {
      char c;
      rl_variable_bind("blink-matching-paren","on");
      rl_callback_handler_install("BearLang> ", &handle_line);
+     rl_pre_input_hook = pre_input_hack;
      rl_bind_key ('\r', &handle_nl);
 
 
