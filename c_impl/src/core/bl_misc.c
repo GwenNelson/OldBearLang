@@ -55,10 +55,12 @@ void bl_dump_expr(bl_val_t* expr) {
 
 static bl_val_t default_env_contents_add_fn    = BL_STATIC_NATIVEFUNC(bl_builtin_add);
 static bl_val_t default_env_contents_set_oper  = BL_STATIC_NATIVEOPER(bl_builtin_set);
+static bl_val_t default_env_contents_fn_oper   = BL_STATIC_NATIVEOPER(bl_builtin_fn);
 
 #define DEFAULT_ENV_CONTENTS \
         X("+",default_env_contents_add_fn,default_env_contents,0) \
-        X("=",default_env_contents_set_oper,default_env_contents,1)
+        X("=",default_env_contents_set_oper,default_env_contents,1) \
+        X("fn",default_env_contents_fn_oper,default_env_contents,2) 
 
 BL_ASSOC_VAL_START(default_env_contents)
 #define X BL_ASSOC_VAL_ENTRY
@@ -82,7 +84,8 @@ BL_ASSOC_ITEMS_END
 static bl_val_t default_env_contents_list[];
 static bl_val_t default_env_contents_list[] = {
     BL_STATIC_LIST_CONS(default_env_contents,0),
-    BL_STATIC_LIST_CONS_LAST(default_env_contents,1)
+    BL_STATIC_LIST_CONS(default_env_contents,1),
+    BL_STATIC_LIST_CONS_LAST(default_env_contents,2)
 };
 
 static bl_val_t default_env = {
@@ -93,15 +96,5 @@ static bl_val_t default_env = {
 };
 
 bl_val_t* bl_init_env() {
-//    bl_val_t* retval = bl_mk_env(&default_env);
-//    retval->contents = bl_val_alloc_block_static(bl_val_alloc_block(3));
-//    retval->contents = bl_mk_static_list(retval->contents,default_env_contents);
-    bl_dump_expr(default_env.env_contents);
     return &default_env;
-//    bl_env_set(retval,bl_mk_symbol("+"),bl_mk_fn_native(bl_builtin_add));
-
-//    bl_env_set(retval,bl_mk_symbol("="),bl_mk_oper_native(bl_builtin_set));
-//    bl_env_set(retval,bl_mk_symbol("fn"),bl_mk_oper_native(bl_builtin_fn));
-
-//    return retval;
 }

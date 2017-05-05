@@ -34,7 +34,7 @@ bl_val_t* bl_eval_bl_func(bl_val_t* env, bl_val_t* func, bl_val_t* params) {
       bl_val_t* cur_line = func->fn_body;
       bl_val_t* retval = NULL;
       while(cur_line != NULL) {
-         retval   = bl_eval_expr(func_closure,bl_list_car(cur_line));
+         if(bl_list_car(cur_line) != NULL) retval   = bl_eval_expr(func_closure,bl_list_car(cur_line));
          cur_line = bl_list_cdr(cur_line);
       }
 
@@ -69,7 +69,7 @@ bl_val_t* bl_eval_expr(bl_val_t* env, bl_val_t* expr) {
                         return bl_eval_native_oper(env,sym_val,bl_list_cdr(expr));
                      }
                      if(sym_val->type == VAL_TYPE_FUNC_BL) {
-                        return bl_eval_bl_func(env, sym_val, bl_list_cdr(expr));
+                        return bl_eval_bl_func(env, sym_val, bl_eval_expr(env,bl_list_cdr(expr)));
                      }
                      return bl_mk_cons(sym_val,bl_eval_expr(env,expr->cdr));
                   }
