@@ -3,14 +3,26 @@
 #include <malloc.h>
 
 bl_val_t* bl_val_alloc() {
-       bl_val_t* retval = calloc(sizeof(bl_val_t),1);
+       bl_val_t* retval   = calloc(sizeof(bl_val_t),1);
+       retval->alloc_type = VAL_ALLOC_DYNAMIC_SINGLE;
        return bl_val_ref(retval);
+}
+
+bl_val_t* bl_val_alloc_block(int n) {
+       bl_val_t* retval = calloc(sizeof(bl_val_t),n);
+       int i=0;
+       for(i=0; i<n; i++) {
+           retval[i].alloc_type = VAL_ALLOC_DYNAMIC_BLOCK;
+           retval[i].head_block = retval;
+       }
+       return retval;
 }
 
 bl_val_t* bl_val_free(bl_val_t* v) {
        if(v==NULL) return;
        v->refs--;
-       if(v->refs > 0) return;
+       if(v->refs >0) return;
+
        switch(v->type) {
           case VAL_TYPE_NIL:
           break;
@@ -39,7 +51,15 @@ bl_val_t* bl_val_free(bl_val_t* v) {
                bl_val_free(v->env_contents);
           break;
        }
-       free(v);
+       switch(v->alloc_type) {
+          case VAL_ALLOC_DYNAMIC_BLOCK:
+               v->head_block->refs--;
+               if(v->head_block->refs ==0) free(v->head_block);
+          break;
+          case VAL_ALLOC_DYNAMIC_SINGLE:
+               free(v);
+          break;
+       }
 }
 
 bl_val_t* bl_val_copy(bl_val_t* v) {
@@ -79,6 +99,7 @@ bl_val_t* bl_val_copy(bl_val_t* v) {
 
 bl_val_t* bl_val_ref(bl_val_t* v) {
        if(v==NULL) return NULL;
+       if(v->alloc_type == VAL_ALLOC_DYNAMIC_BLOCK) v->head_block->refs++;
        v->refs++;
        return v;
 }

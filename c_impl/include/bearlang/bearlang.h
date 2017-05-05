@@ -7,10 +7,11 @@
 // ==== MEMORY MANAGEMENT ====
 // implemented in bl_val_mm.c
 // all values used within BearLang should be handled using these functions and not via directly calling malloc() and free()
-bl_val_t* bl_val_alloc();           // allocates memory for a value and returns pointer to it, with a single reference
-bl_val_t* bl_val_free(bl_val_t* v); // decrements reference counter for v and frees the memory if that was the last reference
-bl_val_t* bl_val_copy(bl_val_t* v); // creates a new value with a copy of the old value with a single reference
-bl_val_t* bl_val_ref(bl_val_t* v);  // increments reference counter for v and returns a pointer to it
+bl_val_t* bl_val_alloc();            // allocates memory for a value and returns pointer to it, with a single reference
+bl_val_t* bl_val_alloc_block(int n); // allocates memory for n values and returns a pointer to the head of the block - this does NOT init reference counts etc, only allocates the block
+bl_val_t* bl_val_free(bl_val_t* v);  // decrements reference counter for v and frees the memory if that was the last reference
+bl_val_t* bl_val_copy(bl_val_t* v);  // creates a new value with a copy of the old value with a single reference
+bl_val_t* bl_val_ref(bl_val_t* v);   // increments reference counter for v and returns a pointer to it
 
 // ==== ENVIRONMENTS ====
 // implemented in bl_env.c

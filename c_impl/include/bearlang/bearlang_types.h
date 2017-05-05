@@ -12,11 +12,20 @@ typedef enum bl_val_type_t {
     VAL_TYPE_ENV,
 } bl_val_type_t;
 
+typedef enum bl_val_alloc_type_t {
+    VAL_ALLOC_DYNAMIC_SINGLE, // single value allocated using system malloc() and free()
+    VAL_ALLOC_DYNAMIC_BLOCK,  // blocks of values allocated using system malloc() and free()
+} bl_val_alloc_type_t;
+
 typedef struct bl_val_t bl_val_t;
 typedef bl_val_t* (*bl_native_fn_t)(bl_val_t* env, bl_val_t* args); // pointer to a native function for use in fn values
 
 typedef struct bl_val_t {
     bl_val_type_t type;
+
+    // memory management stuff
+    bl_val_alloc_type_t alloc_type; // what type of memory allocation was used
+    bl_val_t* head_block;           // if part of a block, this points to the block head
 
     // simple ref counting
     int refs;
@@ -39,7 +48,7 @@ typedef struct bl_val_t {
 
     // for environments
     bl_val_t* env_parent;
-    bl_val_t* env_contents; // list of (k,v) pairs
+    bl_val_t* env_contents;
 
     // for cons
     bl_val_t* car;

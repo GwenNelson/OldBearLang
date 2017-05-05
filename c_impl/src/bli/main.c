@@ -16,11 +16,14 @@ bl_val_t* parse_ast(mpc_ast_t *t) {
        if(strstr(t->tag,"symbol")) return bl_mk_symbol(t->contents);
        if(strcmp(t->tag,">")==0 || strstr(t->tag,"sexpr")) {
 
-          bl_val_t* retval = bl_mk_cons(parse_ast(t->children[1]),NULL);
-          for(i=2; i < t->children_num-1; i++) {
-              bl_list_append(retval, parse_ast(t->children[i]));
+          bl_val_t* retval = bl_val_alloc_block(t->children_num);
+
+          for(i=1; i < t->children_num-1; i++) {
+              retval[i-1].type = VAL_TYPE_CONS;
+              retval[i-1].car  = parse_ast(t->children[i]);
+              retval[i-1].cdr  = bl_val_ref(&(retval[i]));
           }
-          return retval;
+          return bl_val_ref(retval);
        }
        return NULL;
 }
