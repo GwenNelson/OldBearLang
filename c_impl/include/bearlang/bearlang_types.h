@@ -15,6 +15,7 @@ typedef enum bl_val_type_t {
 typedef enum bl_val_alloc_type_t {
     VAL_ALLOC_DYNAMIC_SINGLE, // single value allocated using system malloc() and free()
     VAL_ALLOC_DYNAMIC_BLOCK,  // blocks of values allocated using system malloc() and free()
+    VAL_ALLOC_STATIC,         // static reference - will never be freed
 } bl_val_alloc_type_t;
 
 typedef struct bl_val_t bl_val_t;
@@ -26,6 +27,7 @@ typedef struct bl_val_t {
     // memory management stuff
     bl_val_alloc_type_t alloc_type; // what type of memory allocation was used
     bl_val_t* head_block;           // if part of a block, this points to the block head
+    int block_len;                  // how many elements in this block
 
     // simple ref counting
     int refs;

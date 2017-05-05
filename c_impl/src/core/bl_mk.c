@@ -9,6 +9,20 @@ bl_val_t* bl_mk_cons(bl_val_t* car, bl_val_t* cdr) {
        return retval;
 }
 
+bl_val_t* bl_mk_static_list(bl_val_t* b, bl_val_t* l) {
+       int i=0;
+       for(i=0; i < b->head_block->block_len; i++) {
+           b[i].type = VAL_TYPE_CONS;
+           b[i].car  = &(l[i]);
+           if( i < b->head_block->block_len) {
+               b[i].cdr  = &(b[i+1]);
+           } else {
+               b[i].cdr = NULL;
+           }
+       }
+       return b;
+}
+
 bl_val_t* bl_mk_int(int i) {
        bl_val_t* retval = bl_val_alloc();
        retval->type = VAL_TYPE_INT;

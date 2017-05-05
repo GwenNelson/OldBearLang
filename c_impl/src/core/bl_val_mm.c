@@ -9,7 +9,8 @@ bl_val_t* bl_val_alloc() {
 }
 
 bl_val_t* bl_val_alloc_block(int n) {
-       bl_val_t* retval = calloc(sizeof(bl_val_t),n);
+       bl_val_t* retval  = calloc(sizeof(bl_val_t),n);
+       retval->block_len = n;
        int i=0;
        for(i=0; i<n; i++) {
            retval[i].alloc_type = VAL_ALLOC_DYNAMIC_BLOCK;
@@ -18,8 +19,27 @@ bl_val_t* bl_val_alloc_block(int n) {
        return retval;
 }
 
+bl_val_t* bl_val_alloc_static(bl_val_t* v) {
+       if(v==NULL) return NULL;
+       v->alloc_type = VAL_ALLOC_STATIC;
+       return v;
+}
+
+bl_val_t* bl_val_alloc_block_static(bl_val_t* v, int n) {
+       if(v==NULL) return NULL;
+       v->alloc_type = VAL_ALLOC_STATIC;
+       v->block_len  = n;
+       int i=0;
+       for(i=0; i<n; i++) {
+           v[i].alloc_type = VAL_ALLOC_STATIC;
+           v[i].head_block = v;
+       }
+       return v;
+}
+
 bl_val_t* bl_val_free(bl_val_t* v) {
        if(v==NULL) return;
+       if(v->alloc_type == VAL_ALLOC_STATIC) return;
        v->refs--;
        if(v->refs >0) return;
 
@@ -99,6 +119,7 @@ bl_val_t* bl_val_copy(bl_val_t* v) {
 
 bl_val_t* bl_val_ref(bl_val_t* v) {
        if(v==NULL) return NULL;
+       if(v->alloc_type == VAL_ALLOC_STATIC) return v;
        if(v->alloc_type == VAL_ALLOC_DYNAMIC_BLOCK) v->head_block->refs++;
        v->refs++;
        return v;

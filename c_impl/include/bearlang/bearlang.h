@@ -7,8 +7,14 @@
 // ==== MEMORY MANAGEMENT ====
 // implemented in bl_val_mm.c
 // all values used within BearLang should be handled using these functions and not via directly calling malloc() and free()
-bl_val_t* bl_val_alloc();            // allocates memory for a value and returns pointer to it, with a single reference
-bl_val_t* bl_val_alloc_block(int n); // allocates memory for n values and returns a pointer to the head of the block - this does NOT init reference counts etc, only allocates the block
+bl_val_t* bl_val_alloc();                   // allocates memory for a value and returns pointer to it, with a single reference
+bl_val_t* bl_val_alloc_block(int n);        // allocates memory for n values and returns a pointer to the head of the block - this does NOT init reference counts etc, only allocates the block
+
+bl_val_t* bl_val_alloc_block_static(bl_val_t* v, int n); // allocates a static block
+
+bl_val_t* bl_val_alloc_static(bl_val_t* v); // creates a static reference pointer to v and returns it - this means that v will NEVER be freed, use with caution
+                                            // note that this does not do any init or setup either, it is intended for use in compiled code
+
 bl_val_t* bl_val_free(bl_val_t* v);  // decrements reference counter for v and frees the memory if that was the last reference
 bl_val_t* bl_val_copy(bl_val_t* v);  // creates a new value with a copy of the old value with a single reference
 bl_val_t* bl_val_ref(bl_val_t* v);   // increments reference counter for v and returns a pointer to it
@@ -24,6 +30,7 @@ bl_val_t* bl_env_set(bl_val_t* env, bl_val_t* k, bl_val_t* v); // set the value 
 // implemented in bl_mk.c
 // these functions should be used for creating new values
 bl_val_t* bl_mk_cons(bl_val_t* car, bl_val_t* cdr);       // creates a new cons value and returns a pointer to it with a single reference, car and cdr are reference incremented
+bl_val_t* bl_mk_static_list(bl_val_t* b, bl_val_t* l);    // creates a static ref list starting in the block specified by b and populated with items from the array in l, use only on static values
 bl_val_t* bl_mk_int(int i);                               // creates an integer value and returns a pointer to it with a single reference
 bl_val_t* bl_mk_symbol(char* sym_name);                   // creates a symbol and returns a pointer to it with a single reference
 bl_val_t* bl_mk_str(char* s);                             // creates a string and returns a pointer to it with a single reference
@@ -66,5 +73,5 @@ bl_val_t* bl_eval_expr(bl_val_t* env, bl_val_t* expr);                          
 // ==== TOOLS AND MISC ====
 // implemented in bl_misc.c
 // misc stuff that doesn't fit elsewhere
-bl_val_t* bl_init_env();           // returns a default sane environment intended for use as the root env
+bl_val_t* bl_init_env();           // returns a default sane environment intended for use as the root env - this is implemented as a static ref
 void bl_dump_expr(bl_val_t* expr); // dumps an expression to stdout
