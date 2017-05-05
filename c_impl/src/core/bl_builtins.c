@@ -12,6 +12,27 @@ bl_val_t* bl_builtin_add(bl_val_t* env, bl_val_t* args) {
       return bl_mk_int(retval);
 }
 
+bl_val_t* bl_builtin_sub(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* a = bl_list_car(args);
+      bl_val_t* b = bl_list_car(bl_list_cdr(args));
+      int retval = a->int_val - b->int_val;
+      return bl_mk_int(retval);
+}
+
+bl_val_t* bl_builtin_mult(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* a = bl_list_car(args);
+      bl_val_t* b = bl_list_car(bl_list_cdr(args));
+      int retval  = a->int_val * b->int_val;
+      return bl_mk_int(retval);
+}
+
+bl_val_t* bl_builtin_div(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* a = bl_list_car(args);
+      bl_val_t* b = bl_list_car(bl_list_cdr(args));
+      int retval  = a->int_val / b->int_val;
+      return bl_mk_int(retval);
+}
+
 bl_val_t* bl_builtin_set(bl_val_t* env, bl_val_t* args) {
       bl_val_t* k = bl_val_copy(bl_list_car(args));
       bl_val_t* v = bl_eval_expr(env,(bl_list_car(bl_list_cdr(args))));

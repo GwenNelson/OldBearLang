@@ -73,9 +73,13 @@ void handle_line(char* l) {
 int main(int argc, char** argv) {
     repl_env = bl_init_env();
 
-    for(;;) {
+    while(!feof(stdin)) {
        char* input = readline("> ");
-       handle_line(input);
-       free(input);
+       if(input != NULL) {
+          handle_line(input);
+          free(input);
+       } else {
+          return 0;
+       }
     }
 }
