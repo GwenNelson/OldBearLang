@@ -92,6 +92,46 @@ bl_val_t* bl_builtin_if(bl_val_t* env, bl_val_t* args) {
 
 }
 
+bl_val_t* bl_builtin_eq(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* a = bl_eval_expr(env,bl_list_car(args));
+      bl_val_t* b = bl_eval_expr(env,bl_list_car(bl_list_cdr(args)));
+      if(a==b) return bl_mk_bool(true);
+
+      if(a != NULL) {
+         if(a->type != b->type) return bl_mk_bool(false);
+         switch(a->type) {
+            case VAL_TYPE_NIL:
+                 if(b->type == VAL_TYPE_NIL) return bl_mk_bool(true);
+            break;
+            case VAL_TYPE_STR:
+                 if(strcmp(a->str_val,b->str_val)==0) return bl_mk_bool(true);
+            break;
+            case VAL_TYPE_INT:
+                 if(a->int_val == b->int_val) return bl_mk_bool(true);
+            break;
+            case VAL_TYPE_CONS:
+                 // TODO - implement this fucker - basically iterate through the fucker and fuckity fuckfuck fuck
+            break;
+            case VAL_TYPE_FUNC_BL:
+                 // TODO - implement this fucker too
+            break;
+            case VAL_TYPE_OPER_NATIVE:
+                 if(a->fn_native_code == b->fn_native_code) return bl_mk_bool(true);
+            break;
+            case VAL_TYPE_FUNC_NATIVE:
+                 if(a->fn_native_code == b->fn_native_code) return bl_mk_bool(true);
+            break;
+            case VAL_TYPE_ENV:
+                 // TODO - implement like the others
+            break;
+            case VAL_TYPE_BOOL:
+                 if(a->bool_val == b->bool_val) return bl_mk_bool(true);
+            break;
+         }
+      }
+      return bl_mk_bool(false);
+}
+
 bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
       bl_val_t* c = args;
       while(c != NULL) {

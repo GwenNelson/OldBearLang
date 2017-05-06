@@ -68,6 +68,7 @@ bl_val_t* bl_builtin_fn(bl_val_t*  env, bl_val_t* args); // BearLang's lambda - 
 bl_val_t* bl_builtin_fun(bl_val_t* env, bl_val_t* args); // BearLang's defun - sets variable in environment to new function and returns that function
 bl_val_t* bl_builtin_do(bl_val_t*  env, bl_val_t* args); // evaluates all the arguments and returns result of last one
 bl_val_t* bl_builtin_if(bl_val_t*  env, bl_val_t* args); // implements (if cond then-action else-action) ;)
+bl_val_t* bl_builtin_eq(bl_val_t*  env, bl_val_t* args); // implements eq operator - evaluates arguments and returns a boolean if they're equal
 
 // ==== EVALUATION ====
 // implemented in bl_eval.c
