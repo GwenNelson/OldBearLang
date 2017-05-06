@@ -24,6 +24,7 @@ bl_val_t* parse_ast(mpc_ast_t *t) {
        if(strstr(t->tag,"string"))  {
           char* str_content = strdup(t->contents + 1);
           str_content[strlen(str_content)-1] = 0;
+          str_content = mpcf_unescape(str_content);
           bl_val_t* sval = bl_mk_str(str_content);
           free(str_content);
           return sval;

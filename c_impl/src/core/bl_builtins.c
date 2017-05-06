@@ -79,6 +79,19 @@ bl_val_t* bl_builtin_do(bl_val_t* env, bl_val_t* args) {
       return retval;
 }
 
+bl_val_t* bl_builtin_if(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* cond         = bl_eval_expr(env,bl_list_car(args));
+      bl_val_t* then_clause  = bl_list_car(bl_list_cdr(args));
+      bl_val_t* else_clause  = bl_list_car(bl_list_cdr(bl_list_cdr(args))); // TODO: add first, rest, second, third list ops to make this simpler
+      if(cond->bool_val) {
+         return bl_eval_expr(env,then_clause);
+      } else {
+         return bl_eval_expr(env,else_clause);
+      }
+      return NULL;
+
+}
+
 bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
       bl_val_t* c = args;
       while(c != NULL) {

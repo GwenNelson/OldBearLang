@@ -55,10 +55,10 @@ bl_val_t* bl_list_last(bl_val_t* l);                // returns the last value in
 // ==== BUILTIN FUNCTIONS ====
 // implemented in bl_builtins.c
 // these should be added to your root environment to get a usable language
-bl_val_t* bl_builtin_add(bl_val_t* env,  bl_val_t* args);  // sums the args and returns the result as a new int val OR concatenates strings
-bl_val_t* bl_builtin_sub(bl_val_t* env,  bl_val_t* args);  // takes 2 args (a b) and returns a-b
-bl_val_t* bl_builtin_mult(bl_val_t* env, bl_val_t* args);  // takes 2 args (a b) and returns a*b
-bl_val_t* bl_builtin_div(bl_val_t* env,  bl_val_t* args);  // takes 2 args (a b) and returns a/b
+bl_val_t* bl_builtin_add(bl_val_t*   env, bl_val_t* args); // sums the args and returns the result as a new int val OR concatenates strings
+bl_val_t* bl_builtin_sub(bl_val_t*   env, bl_val_t* args); // takes 2 args (a b) and returns a-b
+bl_val_t* bl_builtin_mult(bl_val_t*  env, bl_val_t* args); // takes 2 args (a b) and returns a*b
+bl_val_t* bl_builtin_div(bl_val_t*   env, bl_val_t* args); // takes 2 args (a b) and returns a/b
 bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args); // prints the arguments to stdout
 
 // ==== BUILTIN OPERATORS ====
@@ -66,7 +66,8 @@ bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args); // prints the argumen
 bl_val_t* bl_builtin_set(bl_val_t* env, bl_val_t* args); // sets a variable in the environment and returns the new value
 bl_val_t* bl_builtin_fn(bl_val_t*  env, bl_val_t* args); // BearLang's lambda - returns a new function
 bl_val_t* bl_builtin_fun(bl_val_t* env, bl_val_t* args); // BearLang's defun - sets variable in environment to new function and returns that function
-bl_val_t* bl_builtin_do(bl_val_t* env,  bl_val_t* args); // evaluates all the arguments and returns result of last one
+bl_val_t* bl_builtin_do(bl_val_t*  env, bl_val_t* args); // evaluates all the arguments and returns result of last one
+bl_val_t* bl_builtin_if(bl_val_t*  env, bl_val_t* args); // implements (if cond then-action else-action) ;)
 
 // ==== EVALUATION ====
 // implemented in bl_eval.c
