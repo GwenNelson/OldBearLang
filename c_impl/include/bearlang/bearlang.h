@@ -60,6 +60,8 @@ bl_val_t* bl_builtin_sub(bl_val_t*   env, bl_val_t* args); // takes 2 args (a b)
 bl_val_t* bl_builtin_mult(bl_val_t*  env, bl_val_t* args); // takes 2 args (a b) and returns a*b
 bl_val_t* bl_builtin_div(bl_val_t*   env, bl_val_t* args); // takes 2 args (a b) and returns a/b
 bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args); // prints the arguments to stdout
+bl_val_t* bl_builtin_lt(bl_val_t*    env, bl_val_t* args); // takes 2 int args and returns boolean true if a<b
+bl_val_t* bl_builtin_gt(bl_val_t*    env, bl_val_t* args); // takes 2 int args and returns boolean true if a>b
 
 // ==== BUILTIN OPERATORS ====
 // implemented in bl_builtins.c

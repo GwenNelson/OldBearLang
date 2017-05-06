@@ -72,6 +72,9 @@ static bl_val_t default_env_contents_do_oper   = BL_STATIC_NATIVEOPER(bl_builtin
 static bl_val_t default_env_contents_if_oper   = BL_STATIC_NATIVEOPER(bl_builtin_if);
 static bl_val_t default_env_contents_eq_oper   = BL_STATIC_NATIVEOPER(bl_builtin_eq);
 
+static bl_val_t default_env_contents_gt_fn     = BL_STATIC_NATIVEFUNC(bl_builtin_gt);
+static bl_val_t default_env_contents_lt_fn     = BL_STATIC_NATIVEFUNC(bl_builtin_lt);
+
 static bl_val_t default_env_contents_true  = BL_STATIC_BOOL(true);
 static bl_val_t default_env_contents_false = BL_STATIC_BOOL(false);
 
@@ -88,7 +91,9 @@ static bl_val_t default_env_contents_false = BL_STATIC_BOOL(false);
         X("True", default_env_contents_true,     default_env_contents, 9) \
         X("False",default_env_contents_false,    default_env_contents, 10) \
         X("if",   default_env_contents_if_oper,  default_env_contents, 11) \
-        X("eq",   default_env_contents_eq_oper,  default_env_contents, 12)
+        X("eq",   default_env_contents_eq_oper,  default_env_contents, 12) \
+        X(">",    default_env_contents_gt_fn,    default_env_contents, 13) \
+        X("<",    default_env_contents_lt_fn,    default_env_contents, 14)
 
 BL_ASSOC_VAL_START(default_env_contents)
 #define X BL_ASSOC_VAL_ENTRY
@@ -123,7 +128,9 @@ static bl_val_t default_env_contents_list[] = {
     BL_STATIC_LIST_CONS(default_env_contents,9),
     BL_STATIC_LIST_CONS(default_env_contents,10),
     BL_STATIC_LIST_CONS(default_env_contents,11),
-    BL_STATIC_LIST_CONS_LAST(default_env_contents,12)
+    BL_STATIC_LIST_CONS(default_env_contents,12),
+    BL_STATIC_LIST_CONS(default_env_contents,13),
+    BL_STATIC_LIST_CONS_LAST(default_env_contents,14)
 };
 
 static bl_val_t default_env = {

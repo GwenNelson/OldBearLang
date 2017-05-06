@@ -132,6 +132,20 @@ bl_val_t* bl_builtin_eq(bl_val_t* env, bl_val_t* args) {
       return bl_mk_bool(false);
 }
 
+bl_val_t* bl_builtin_lt(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* a = bl_eval_expr(env,bl_list_car(args));
+      bl_val_t* b = bl_eval_expr(env,bl_list_car(bl_list_cdr(args)));
+      if(a->int_val < b->int_val) return bl_mk_bool(true);
+      return bl_mk_bool(false);
+}
+
+bl_val_t* bl_builtin_gt(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* a = bl_eval_expr(env,bl_list_car(args));
+      bl_val_t* b = bl_eval_expr(env,bl_list_car(bl_list_cdr(args)));
+      if(a->int_val > b->int_val) return bl_mk_bool(true);
+      return bl_mk_bool(false);
+}
+
 bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
       bl_val_t* c = args;
       while(c != NULL) {
