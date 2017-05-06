@@ -63,7 +63,8 @@ bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args); // prints the argumen
 // ==== BUILTIN OPERATORS ====
 // implemented in bl_builtins.c
 bl_val_t* bl_builtin_set(bl_val_t* env, bl_val_t* args); // sets a variable in the environment and returns the new value
-bl_val_t* bl_builtin_fn(bl_val_t* env, bl_val_t* args);  // BearLang's lambda - returns a new function
+bl_val_t* bl_builtin_fn(bl_val_t*  env, bl_val_t* args); // BearLang's lambda - returns a new function
+bl_val_t* bl_builtin_fun(bl_val_t* env, bl_val_t* args); // BearLang's defun - sets variable in environment to new function and returns that function
 
 // ==== EVALUATION ====
 // implemented in bl_eval.c

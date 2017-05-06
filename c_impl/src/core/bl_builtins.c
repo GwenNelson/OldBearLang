@@ -60,6 +60,14 @@ bl_val_t* bl_builtin_fn(bl_val_t* env, bl_val_t* args) {
       return bl_mk_fn_bl(fn_params,fn_body);
 }
 
+bl_val_t* bl_builtin_fun(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* fun_name  = bl_val_copy(bl_list_car(args));
+      bl_val_t* fn_params = bl_list_cdr(args);
+      bl_val_t* fn_retval = bl_builtin_fn(env,fn_params);
+      bl_env_set(env,fun_name,fn_retval);
+      return(fn_retval);
+}
+
 bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
       bl_val_t* c = args;
       while(c != NULL) {
