@@ -20,6 +20,13 @@ void bl_dump_expr(bl_val_t* expr) {
           case VAL_TYPE_INT:
                printf("%d",expr->int_val);
           break;
+          case VAL_TYPE_BOOL:
+               if(expr->bool_val) {
+                  printf("True");
+               } else {
+                  printf("False");
+               }
+          break;
           case VAL_TYPE_SYMBOL:
                printf("%s",expr->sym_name);
           break;
@@ -63,6 +70,9 @@ static bl_val_t default_env_contents_print_fn  = BL_STATIC_NATIVEFUNC(bl_builtin
 static bl_val_t default_env_contents_fun_oper  = BL_STATIC_NATIVEOPER(bl_builtin_fun);
 static bl_val_t default_env_contents_do_oper   = BL_STATIC_NATIVEOPER(bl_builtin_do);
 
+static bl_val_t default_env_contents_true  = BL_STATIC_BOOL(true);
+static bl_val_t default_env_contents_false = BL_STATIC_BOOL(false);
+
 #define DEFAULT_ENV_CONTENTS \
         X("+",    default_env_contents_add_fn,   default_env_contents, 0) \
         X("-",    default_env_contents_sub_fn,   default_env_contents, 1) \
@@ -72,7 +82,9 @@ static bl_val_t default_env_contents_do_oper   = BL_STATIC_NATIVEOPER(bl_builtin
         X("fn",   default_env_contents_fn_oper,  default_env_contents, 5) \
         X("print",default_env_contents_print_fn, default_env_contents, 6) \
         X("fun",  default_env_contents_fun_oper, default_env_contents, 7) \
-        X("do",   default_env_contents_do_oper,  default_env_contents, 8)
+        X("do",   default_env_contents_do_oper,  default_env_contents, 8) \
+        X("True", default_env_contents_true,     default_env_contents, 9) \
+        X("False",default_env_contents_false,    default_env_contents, 10)
 
 BL_ASSOC_VAL_START(default_env_contents)
 #define X BL_ASSOC_VAL_ENTRY
@@ -103,7 +115,9 @@ static bl_val_t default_env_contents_list[] = {
     BL_STATIC_LIST_CONS(default_env_contents,5),
     BL_STATIC_LIST_CONS(default_env_contents,6),
     BL_STATIC_LIST_CONS(default_env_contents,7),
-    BL_STATIC_LIST_CONS_LAST(default_env_contents,8)
+    BL_STATIC_LIST_CONS(default_env_contents,8),
+    BL_STATIC_LIST_CONS(default_env_contents,9),
+    BL_STATIC_LIST_CONS_LAST(default_env_contents,10)
 };
 
 static bl_val_t default_env = {

@@ -30,6 +30,14 @@ bl_val_t* bl_mk_int(int i) {
        return retval;
 }
 
+
+bl_val_t* bl_mk_bool(bool b) {
+       bl_val_t* retval = bl_val_alloc();
+       retval->type = VAL_TYPE_BOOL;
+       retval->bool_val = b;
+       return retval;
+}
+
 bl_val_t* bl_mk_symbol(char* sym_name) {
        bl_val_t* retval = bl_val_alloc();
        retval->type     = VAL_TYPE_SYMBOL;

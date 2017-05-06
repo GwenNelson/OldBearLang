@@ -18,7 +18,9 @@ bl_val_t* repl_env;
 bl_val_t* parse_ast(mpc_ast_t *t) {
        int i=0;
        if(strstr(t->tag,"number")) return bl_mk_int(atoi(t->contents));
-       if(strstr(t->tag,"symbol")) return bl_mk_symbol(t->contents);
+       if(strstr(t->tag,"symbol")) { 
+          return bl_mk_symbol(t->contents);
+       }
        if(strstr(t->tag,"string"))  {
           char* str_content = strdup(t->contents + 1);
           str_content[strlen(str_content)-1] = 0;
@@ -43,6 +45,7 @@ bl_val_t* parse_ast(mpc_ast_t *t) {
 mpc_parser_t* mpc_Number;
 mpc_parser_t* mpc_Symbol;
 mpc_parser_t* mpc_String;
+mpc_parser_t* mpc_Bool;
 mpc_parser_t* mpc_Sexpr;
 mpc_parser_t* mpc_Expr;
 mpc_parser_t* mpc_Lispy;
@@ -55,7 +58,7 @@ void init_mpc() {
      mpc_String = mpc_new("string");
      mpc_Expr   = mpc_new("expr");
      mpc_Lispy  = mpc_new("lispy");
-
+     
     
      mpca_lang(MPCA_LANG_DEFAULT,
       "                                          \
@@ -111,6 +114,7 @@ int handle_nl() {
         sexp_ready = 1;
         rl_set_prompt("BearLang> ");
      } else {
+        mpc_err_delete(r.error);
         rl_set_prompt("        > ");
 
         last_line = strdup(rl_line_buffer);

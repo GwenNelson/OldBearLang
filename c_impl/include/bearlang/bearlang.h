@@ -37,6 +37,7 @@ bl_val_t* bl_mk_str(char* s);                             // creates a string an
 bl_val_t* bl_mk_fn_native(bl_native_fn_t f);              // creates a function using native code and returns a pointer to it with a single reference
 bl_val_t* bl_mk_oper_native(bl_native_fn_t f);            // creates an operator using native code and returns a pointer to it with a single reference
 bl_val_t* bl_mk_fn_bl(bl_val_t* args, bl_val_t* body);    // creates a function using BearLang code, args and body are reference incremented, returns pointer with single reference
+bl_val_t* bl_mk_bool(bool b);                             // creates a boolean value
 
 // ==== SYMBOL OPERATIONS ====
 // implemented in bl_symbol_ops.c

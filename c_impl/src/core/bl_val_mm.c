@@ -58,6 +58,8 @@ bl_val_t* bl_val_free(bl_val_t* v) {
           break;
           case VAL_TYPE_INT:
           break;
+          case VAL_TYPE_BOOL:
+          break;
           case VAL_TYPE_FUNC_BL:
                bl_val_free(v->fn_args);
                bl_val_free(v->fn_body);
@@ -98,6 +100,9 @@ bl_val_t* bl_val_copy(bl_val_t* v) {
           break;
           case VAL_TYPE_INT:
                return bl_mk_int(v->int_val);
+          break;
+          case VAL_TYPE_BOOL:
+               return bl_mk_bool(v->bool_val);
           break;
           case VAL_TYPE_FUNC_BL:
                return bl_mk_fn_bl(v->fn_args, v->fn_body);

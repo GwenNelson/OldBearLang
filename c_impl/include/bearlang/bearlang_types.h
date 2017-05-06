@@ -1,11 +1,14 @@
 #pragma once
 
+#include <stdbool.h>
+
 typedef enum bl_val_type_t {
     VAL_TYPE_NIL,
     VAL_TYPE_SYMBOL,
     VAL_TYPE_STR,
     VAL_TYPE_CONS,
     VAL_TYPE_INT,
+    VAL_TYPE_BOOL,
     VAL_TYPE_FUNC_BL,
     VAL_TYPE_FUNC_NATIVE,
     VAL_TYPE_OPER_NATIVE,
@@ -34,6 +37,9 @@ typedef struct bl_val_t {
 
     // for int
     int int_val;
+
+    // for boolean
+    bool bool_val;
 
     // for string
     char* str_val;
