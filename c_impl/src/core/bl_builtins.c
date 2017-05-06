@@ -1,8 +1,21 @@
 #include <bearlang/bearlang.h>
 
+#include <string.h>
 
 bl_val_t* bl_builtin_add(bl_val_t* env, bl_val_t* args) {
-      // TODO - add support for strings etc
+      // TODO - add support for (+ "bla bla" 2) and such (add strings and integers together, automatically convert integers to strings)
+      if(bl_list_car(args)->type == VAL_TYPE_STR) {
+         bl_val_t* retval = bl_mk_str("");
+         bl_val_t* c = args;
+         while(c != NULL) {
+            if(c != NULL) {
+               retval->str_val = realloc(retval->str_val,strlen(retval->str_val)+strlen(bl_list_car(c)->str_val));
+               strcat(retval->str_val,bl_list_car(c)->str_val);
+            }
+            c = bl_list_cdr(c);
+         }
+         return retval;
+      }
       int retval=0;
       bl_val_t* c = args;
       while(c != NULL) {

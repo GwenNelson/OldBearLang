@@ -1,4 +1,12 @@
 Implement a NICE s-expression reader using readline
+   Write new readline:
+      Display "BearLang> " prompt
+      Take character by character:
+         Add to current string
+         if \n
+            If current string is a complete expression, pass to parser and handle, then reset current string
+            If current string is a partial expression, display " > " prompt with appropriate indent
+         
    Look into making this work over sockets and other nice things
 Add string support to builtins
 Implement simple console output (print) and fun operator for defining functions

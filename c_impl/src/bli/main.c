@@ -19,6 +19,13 @@ bl_val_t* parse_ast(mpc_ast_t *t) {
        int i=0;
        if(strstr(t->tag,"number")) return bl_mk_int(atoi(t->contents));
        if(strstr(t->tag,"symbol")) return bl_mk_symbol(t->contents);
+       if(strstr(t->tag,"string"))  {
+          char* str_content = strdup(t->contents + 1);
+          str_content[strlen(str_content)-1] = 0;
+          bl_val_t* sval = bl_mk_str(str_content);
+          free(str_content);
+          return sval;
+       }
        if(strcmp(t->tag,">")==0 || strstr(t->tag,"sexpr")) {
 
           bl_val_t* retval = bl_val_alloc_block(t->children_num);
