@@ -26,6 +26,40 @@ Implement control-flow operators
 Implement reading files from command line
 Rework environment to use a primitive hashtable type
 
+Implement compiler
+   Simple version: spit out bunch of C code to dynamically create all expressions in a file and evaluate them one by one
+   Put each toplevel expression into a seperate C function that takes env as a param and runs bl_eval_expr() on the expression, returning the result
+   Check each toplevel expression
+          If the expression is NOT an assignment
+             Output 2 C functions:
+                 1 - a function that constructs the literal expression using bl_mk_* functions
+                 2 - a function that evaluates the output of function 1 above
+          If the expression is an assignment (via = or fun)
+             Check value
+                 If a function or operator, output 4 C functions:
+                    1 - a function that constructs the value of the expression for the function body and stores it into a static bl_val_t*
+                    2 - a function that actually implements the function or operator and can be used as a param to bl_mk_* functions
+                    3 - a function that returns the bl_val_t* for the function or operator
+                    4 - a function that assigns the value from function 3 to the environment
+                 If value type not known, output 3 C functions:
+                    1 - a function that constructs the value as a literal expression using bl_mk_*
+                    2 - a function that evaluates the output of function 1 above
+                    3 - a function that assigns the value from function 2 above to the environment
+   After generating the C functions above, depending on mode do the following:
+         for executable output:
+             generate a main() that evaluates the expressions one by one
+                optionally, preload/construct some expressions first
+                construct default environment in whatever way is appropriate
+                run through expressions evaluating them against environment
+             link against BearLang core library
+             link against any external modules
+         for module/library output:
+             generate an init() that constructs an environment as a child environment of whatever param is provided
+             inside init(): construct all toplevel expressions
+             add lines of code to init() to evaluate toplevel expressions in the right order
+             have init() return the environment
+             link as a shared object for use with dlopen() at runtime
+
 Implement evaluating symbols within environments/namespaces/closures
    eval-with operator to eval arbitrary expression inside a specified environment/namespace/closure/whatever
       (eval-with env expr)
@@ -35,10 +69,11 @@ Implement evaluating symbols within environments/namespaces/closures
       then simply evaluate bar inside of foo
       
 
-Implement loading modules
+Implement loading plain source modules
    (load module-file)
    read from filename (or FD) specified by module-file, evaluate in a new environment, return that new environment
 
-Implement loading symbols via dlopen() and binding into environments
+Implement loading compiled modules via dlopen() and binding into environments
+   use init() to return an environment
 
 Extend :: and friends to automatically use imported files
