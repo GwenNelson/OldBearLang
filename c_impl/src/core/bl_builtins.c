@@ -68,6 +68,17 @@ bl_val_t* bl_builtin_fun(bl_val_t* env, bl_val_t* args) {
       return(fn_retval);
 }
 
+bl_val_t* bl_builtin_do(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* c      = args;
+      bl_val_t* retval = NULL;
+      while(c != NULL) {
+         bl_val_t* car_retval          = bl_eval_expr(env,bl_list_car(c));
+         if(car_retval != NULL) retval = car_retval;
+         c = bl_list_cdr(c);
+      }
+      return retval;
+}
+
 bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
       bl_val_t* c = args;
       while(c != NULL) {
