@@ -4,8 +4,8 @@
 
 
 #include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
+
+#include <stdbool.h>
 
 #include <readline/readline.h>
 
@@ -73,6 +73,14 @@ void init_mpc() {
 
 }
 
+bl_val_t* handle_expr(bl_val_t* e,bool echoret) {
+     bl_val_t* ret_val    = bl_eval_expr(repl_env,e);
+     if(echoret) {
+        bl_dump_expr(ret_val);printf("\n");
+     }
+     return ret_val;
+}
+
 int sexp_ready;
 char* last_line = NULL;
 void handle_line(char* l) {
@@ -91,10 +99,9 @@ void handle_line(char* l) {
       
       mpc_ast_t* t = r.output;
       bl_val_t* parsed_val = parse_ast(t);
-      bl_val_t* ret_val    = bl_eval_expr(repl_env,parsed_val->car);
-      if(ret_val != NULL) bl_dump_expr(ret_val);printf("\n");
-      bl_val_free(parsed_val);
+      bl_val_t* ret_val    = handle_expr(parsed_val->car,true);
       bl_val_free(ret_val);
+      bl_val_free(parsed_val);
       mpc_ast_delete(r.output);
     } else {
       mpc_err_print(r.error);
@@ -140,7 +147,7 @@ int pre_input_hack() {
     }
 }
 
-void do_reads() {
+void do_tty_reads() {
      char c;
      rl_variable_bind("blink-matching-paren","on");
      rl_callback_handler_install("BearLang> ", &handle_line);
@@ -159,5 +166,24 @@ void do_reads() {
 int main(int argc, char** argv) {
     repl_env  = bl_init_env();
     init_mpc();
-    do_reads();
+    if(argc==2) {
+       mpc_result_t r;
+       if(mpc_parse_contents(argv[1],mpc_Lispy,&r)) {
+         bl_val_t* parsed_val = parse_ast(r.output);
+         bl_val_t* c = parsed_val;
+         while(c != NULL) {
+           if(bl_list_car(c) != NULL) bl_val_free(handle_expr(bl_list_car(c),false));
+           c = bl_list_cdr(c);
+         }
+
+         bl_val_free(parsed_val);
+         mpc_ast_delete(r.output);
+       } else {
+         mpc_err_print(r.error);
+         mpc_err_delete(r.error);
+       }
+    }
+    if(isatty(0)) {
+       do_tty_reads();
+    }
 }
