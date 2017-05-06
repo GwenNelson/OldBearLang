@@ -31,6 +31,14 @@ Implement compiler
    Simple version: spit out bunch of C code to dynamically create all expressions in a file and evaluate them one by one
    Put each toplevel expression into a seperate C function that takes env as a param and runs bl_eval_expr() on the expression, returning the result
    Look into adding debug info using preprocessor via #line or via LLVM DWARF output
+   Optimisations
+          For each expression representing a function/oper call, if native code check the value and compare to known core builtins
+          Swap calls to known builtins for code that directly performs the relevant function
+          e.g
+               (+ 2 2 2 (+ 2 3))
+                 in C would become
+               bl_mk_int(2+2+2+(2+3))
+                which would then be optimised by the C compiler into bl_mk_int(11)
    Check each toplevel expression
           If the expression is NOT an assignment
              Output 2 C functions:
