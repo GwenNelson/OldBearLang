@@ -1,6 +1,7 @@
 #include <bearlang/bearlang.h>
 
 #include <string.h>
+#include <stdio.h>
 
 bl_val_t* bl_builtin_add(bl_val_t* env, bl_val_t* args) {
       // TODO - add support for (+ "bla bla" 2) and such (add strings and integers together, automatically convert integers to strings)
@@ -57,4 +58,50 @@ bl_val_t* bl_builtin_fn(bl_val_t* env, bl_val_t* args) {
       bl_val_t* fn_params = bl_val_ref(bl_list_car(args));
       bl_val_t* fn_body   = bl_val_ref(bl_list_cdr(args));
       return bl_mk_fn_bl(fn_params,fn_body);
+}
+
+bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
+      bl_val_t* c = args;
+      while(c != NULL) {
+         if(bl_list_car(c)==NULL) continue;
+         switch(bl_list_car(c)->type) {
+          case VAL_TYPE_NIL:
+               printf("");
+          break;
+          case VAL_TYPE_STR:
+               printf("%s",bl_list_car(c)->str_val);
+          break;
+          case VAL_TYPE_INT:
+               printf("%d",bl_list_car(c)->int_val);
+          break;
+          case VAL_TYPE_SYMBOL:
+               printf("%s",c->sym_name);
+          break;
+          case VAL_TYPE_CONS:{
+               printf("(");
+               bl_val_t* inner_c = bl_list_car(c);
+               while(inner_c != NULL) {
+                  if(bl_list_car(inner_c) != NULL) bl_builtin_print(env,c->car);
+                  if(bl_list_cdr(inner_c) != NULL) printf(" ");
+                  inner_c = bl_list_cdr(inner_c);
+               }
+               printf(")");
+          }
+          break;
+          case VAL_TYPE_FUNC_BL:
+               printf("<function>"); //TODO - make this print out full definition
+          break;
+          case VAL_TYPE_OPER_NATIVE:
+               printf("<oper-native>");
+          break;
+          case VAL_TYPE_FUNC_NATIVE:
+               printf("<function-native>"); // as above, but make it contain a memory address or similar
+          break;
+          case VAL_TYPE_ENV:
+               printf("<env>");
+          break;
+      }
+      c = bl_list_cdr(c);
+    }
+    return NULL;
 }

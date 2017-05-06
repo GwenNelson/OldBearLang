@@ -88,7 +88,7 @@ void handle_line(char* l) {
       mpc_ast_t* t = r.output;
       bl_val_t* parsed_val = parse_ast(t);
       bl_val_t* ret_val    = bl_eval_expr(repl_env,parsed_val->car);
-      bl_dump_expr(ret_val);printf("\n");
+      if(ret_val != NULL) bl_dump_expr(ret_val);printf("\n");
       bl_val_free(parsed_val);
       bl_val_free(ret_val);
       mpc_ast_delete(r.output);
