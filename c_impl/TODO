@@ -1,3 +1,4 @@
+Add a gdb pretty-printer for bl_val_t
 Implement a NICE s-expression reader using readline
    Write new readline:
       Display "BearLang> " prompt
@@ -29,6 +30,7 @@ Rework environment to use a primitive hashtable type
 Implement compiler
    Simple version: spit out bunch of C code to dynamically create all expressions in a file and evaluate them one by one
    Put each toplevel expression into a seperate C function that takes env as a param and runs bl_eval_expr() on the expression, returning the result
+   Look into adding debug info using preprocessor via #line or via LLVM DWARF output
    Check each toplevel expression
           If the expression is NOT an assignment
              Output 2 C functions:
