@@ -61,6 +61,9 @@ void bl_dump_expr(bl_val_t* expr) {
 bl_val_t* bl_init_env() {
     bl_val_t* retval = bl_mk_env(NULL);
 
+    // list operations
+    bl_env_set(retval,bl_mk_symbol("car"),bl_mk_oper_native(bl_builtin_car));
+
     // maths functions
     bl_env_set(retval,bl_mk_symbol("+"),bl_mk_fn_native(bl_builtin_add));
     bl_env_set(retval,bl_mk_symbol("-"),bl_mk_fn_native(bl_builtin_sub));

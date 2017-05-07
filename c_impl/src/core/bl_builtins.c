@@ -147,30 +147,37 @@ bl_val_t* bl_builtin_gt(bl_val_t* env, bl_val_t* args) {
       return bl_mk_bool(false);
 }
 
-bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
-      bl_val_t* c = args;
-      while(c != NULL) {
-         if(bl_list_car(c)==NULL) continue;
-         switch(bl_list_car(c)->type) {
+
+void bl_print_expr(bl_val_t* expr) {
+     if(expr==NULL) {
+        return;
+     }
+     switch(expr->type) {
           case VAL_TYPE_NIL:
-               printf("");
           break;
           case VAL_TYPE_STR:
-               printf("%s",bl_list_car(c)->str_val);
+               printf("%s",expr->str_val);
           break;
           case VAL_TYPE_INT:
-               printf("%d",bl_list_car(c)->int_val);
+               printf("%d",expr->int_val);
+          break;
+          case VAL_TYPE_BOOL:
+               if(expr->bool_val) {
+                  printf("True");
+               } else {
+                  printf("False");
+               }
           break;
           case VAL_TYPE_SYMBOL:
-               printf("%s",c->sym_name);
+               printf("%s",expr->sym_name);
           break;
           case VAL_TYPE_CONS:{
                printf("(");
-               bl_val_t* inner_c = bl_list_car(c);
-               while(inner_c != NULL) {
-                  if(bl_list_car(inner_c) != NULL) bl_builtin_print(env,c->car);
-                  if(bl_list_cdr(inner_c) != NULL) printf(" ");
-                  inner_c = bl_list_cdr(inner_c);
+               bl_val_t* c = expr;
+               while(c != NULL) {
+                  if(bl_list_car(c) != NULL) bl_dump_expr(c->car);
+                  if(bl_list_cdr(c) != NULL) printf(" ");
+                  c = bl_list_cdr(c);
                }
                printf(")");
           }
@@ -188,7 +195,22 @@ bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
                printf("<env>");
           break;
       }
-      c = bl_list_cdr(c);
+
+}
+
+bl_val_t* bl_builtin_print(bl_val_t* env, bl_val_t* args) {
+    if(args == NULL) return NULL;
+    bl_val_t* c = args;
+    while(c != NULL) {
+        bl_print_expr(bl_list_car(c));
+        c = bl_list_cdr(c);
     }
     return NULL;
+}
+
+bl_val_t* bl_builtin_car(bl_val_t* env, bl_val_t* args) {
+    if(bl_list_car(args) != NULL) {
+       if(bl_list_car(args)->type == VAL_TYPE_CONS) return bl_list_car(bl_list_car(args));
+    }
+    return bl_list_car(args);
 }
