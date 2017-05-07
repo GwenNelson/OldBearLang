@@ -47,7 +47,7 @@ void bl_hashmap_set(bl_val_t* map, bl_val_t* k, bl_val_t* v) {
             if(bl_symbol_eq(k,bl_list_car(bl_list_car(c)))) {
                bl_val_t* old_car = bl_list_car(bl_list_cdr(bl_list_car(c)));
                bl_val_free(old_car);
-               bl_list_cdr(bl_list_car(c))->car = v;
+               bl_list_cdr(bl_list_car(c))->car = bl_val_ref(v);
                return;
             }
 
