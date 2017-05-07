@@ -57,89 +57,33 @@ void bl_dump_expr(bl_val_t* expr) {
 
 }
 
-#include <bearlang/bearlang_static_macros.h>
-
-
-static bl_val_t default_env_contents_add_fn    = BL_STATIC_NATIVEFUNC(bl_builtin_add);
-static bl_val_t default_env_contents_sub_fn    = BL_STATIC_NATIVEFUNC(bl_builtin_sub);
-static bl_val_t default_env_contents_mult_fn   = BL_STATIC_NATIVEFUNC(bl_builtin_mult);
-static bl_val_t default_env_contents_div_fn    = BL_STATIC_NATIVEFUNC(bl_builtin_div);
-static bl_val_t default_env_contents_set_oper  = BL_STATIC_NATIVEOPER(bl_builtin_set);
-static bl_val_t default_env_contents_fn_oper   = BL_STATIC_NATIVEOPER(bl_builtin_fn);
-static bl_val_t default_env_contents_print_fn  = BL_STATIC_NATIVEFUNC(bl_builtin_print);
-static bl_val_t default_env_contents_fun_oper  = BL_STATIC_NATIVEOPER(bl_builtin_fun);
-static bl_val_t default_env_contents_do_oper   = BL_STATIC_NATIVEOPER(bl_builtin_do);
-static bl_val_t default_env_contents_if_oper   = BL_STATIC_NATIVEOPER(bl_builtin_if);
-static bl_val_t default_env_contents_eq_oper   = BL_STATIC_NATIVEOPER(bl_builtin_eq);
-
-static bl_val_t default_env_contents_gt_fn     = BL_STATIC_NATIVEFUNC(bl_builtin_gt);
-static bl_val_t default_env_contents_lt_fn     = BL_STATIC_NATIVEFUNC(bl_builtin_lt);
-
-static bl_val_t default_env_contents_true  = BL_STATIC_BOOL(true);
-static bl_val_t default_env_contents_false = BL_STATIC_BOOL(false);
-
-#define DEFAULT_ENV_CONTENTS \
-        X("+",    default_env_contents_add_fn,   default_env_contents, 0) \
-        X("-",    default_env_contents_sub_fn,   default_env_contents, 1) \
-        X("*",    default_env_contents_mult_fn,  default_env_contents, 2) \
-        X("/",    default_env_contents_div_fn,   default_env_contents, 3) \
-        X("=",    default_env_contents_set_oper, default_env_contents, 4) \
-        X("fn",   default_env_contents_fn_oper,  default_env_contents, 5) \
-        X("print",default_env_contents_print_fn, default_env_contents, 6) \
-        X("fun",  default_env_contents_fun_oper, default_env_contents, 7) \
-        X("do",   default_env_contents_do_oper,  default_env_contents, 8) \
-        X("True", default_env_contents_true,     default_env_contents, 9) \
-        X("False",default_env_contents_false,    default_env_contents, 10) \
-        X("if",   default_env_contents_if_oper,  default_env_contents, 11) \
-        X("eq",   default_env_contents_eq_oper,  default_env_contents, 12) \
-        X(">",    default_env_contents_gt_fn,    default_env_contents, 13) \
-        X("<",    default_env_contents_lt_fn,    default_env_contents, 14)
-
-BL_ASSOC_VAL_START(default_env_contents)
-#define X BL_ASSOC_VAL_ENTRY
-DEFAULT_ENV_CONTENTS
-BL_ASSOC_VAL_END
-#undef X
-
-BL_ASSOC_KEY_START(default_env_contents)
-#define X BL_ASSOC_KEY_ENTRY
-DEFAULT_ENV_CONTENTS
-BL_ASSOC_KEY_END
-#undef X
-
-
-BL_ASSOC_ITEMS_START(default_env_contents)
-#define X BL_ASSOC_ITEMS_ENTRY
-DEFAULT_ENV_CONTENTS
-BL_ASSOC_ITEMS_END
-#undef X
-
-static bl_val_t default_env_contents_list[];
-static bl_val_t default_env_contents_list[] = {
-    BL_STATIC_LIST_CONS(default_env_contents,0),
-    BL_STATIC_LIST_CONS(default_env_contents,1),
-    BL_STATIC_LIST_CONS(default_env_contents,2),
-    BL_STATIC_LIST_CONS(default_env_contents,3),
-    BL_STATIC_LIST_CONS(default_env_contents,4),
-    BL_STATIC_LIST_CONS(default_env_contents,5),
-    BL_STATIC_LIST_CONS(default_env_contents,6),
-    BL_STATIC_LIST_CONS(default_env_contents,7),
-    BL_STATIC_LIST_CONS(default_env_contents,8),
-    BL_STATIC_LIST_CONS(default_env_contents,9),
-    BL_STATIC_LIST_CONS(default_env_contents,10),
-    BL_STATIC_LIST_CONS(default_env_contents,11),
-    BL_STATIC_LIST_CONS(default_env_contents,12),
-    BL_STATIC_LIST_CONS(default_env_contents,13),
-    BL_STATIC_LIST_CONS_LAST(default_env_contents,14)
-};
-
-static bl_val_t default_env = {
-    .alloc_type   = VAL_ALLOC_STATIC,
-    .type         = VAL_TYPE_ENV,
-    .env_parent   = NULL,
-    .env_contents = default_env_contents_list,
-};
 
 bl_val_t* bl_init_env() {
-    return &default_env;
+    bl_val_t* retval = bl_mk_env(NULL);
+
+    // maths functions
+    bl_env_set(retval,bl_mk_symbol("+"),bl_mk_fn_native(bl_builtin_add));
+    bl_env_set(retval,bl_mk_symbol("-"),bl_mk_fn_native(bl_builtin_sub));
+    bl_env_set(retval,bl_mk_symbol("*"),bl_mk_fn_native(bl_builtin_mult));
+    bl_env_set(retval,bl_mk_symbol("/"),bl_mk_fn_native(bl_builtin_div));
+    bl_env_set(retval,bl_mk_symbol(">"),bl_mk_fn_native(bl_builtin_gt));
+    bl_env_set(retval,bl_mk_symbol("<"),bl_mk_fn_native(bl_builtin_lt));
+
+    // conditionals, boolean logic, branching and iteration
+    bl_env_set(retval,bl_mk_symbol("if"),bl_mk_oper_native(bl_builtin_if));
+    bl_env_set(retval,bl_mk_symbol("eq"),bl_mk_oper_native(bl_builtin_eq));
+    bl_env_set(retval,bl_mk_symbol("True"),bl_mk_bool(true));
+    bl_env_set(retval,bl_mk_symbol("False"),bl_mk_bool(false));
+
+    // lambda and assignment operators
+    bl_env_set(retval,bl_mk_symbol("="), bl_mk_oper_native(bl_builtin_set));
+    bl_env_set(retval,bl_mk_symbol("fn"),bl_mk_oper_native(bl_builtin_fn));
+
+    // convenience operators and synactic sugar
+    bl_env_set(retval,bl_mk_symbol("fun"),bl_mk_oper_native(bl_builtin_fun));
+    bl_env_set(retval,bl_mk_symbol("do"),bl_mk_oper_native(bl_builtin_do));
+
+    // basic console I/O
+    bl_env_set(retval,bl_mk_symbol("print"),bl_mk_fn_native(bl_builtin_print));
+    return retval;
 }
