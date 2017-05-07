@@ -12,6 +12,7 @@ typedef enum bl_val_type_t {
     VAL_TYPE_FUNC_BL,
     VAL_TYPE_FUNC_NATIVE,
     VAL_TYPE_OPER_NATIVE,
+    VAL_TYPE_HASHMAP,
     VAL_TYPE_ENV,
 } bl_val_type_t;
 
@@ -54,9 +55,13 @@ typedef struct bl_val_t {
     // for native code functions
     bl_native_fn_t fn_native_code;
 
+    // for hashmaps
+    bl_val_t* hashmap_buckets;          // array of assoc lists - each list is a simple list of lists of (k,v) pairs
+    int       hashmap_bucket_count;     // count of buckets
+    
     // for environments
     bl_val_t* env_parent;
-    bl_val_t* env_contents;
+    bl_val_t* env_contents; // hashmap
 
     // for cons
     bl_val_t* car;

@@ -92,6 +92,7 @@ bl_val_t* bl_builtin_if(bl_val_t* env, bl_val_t* args) {
 
 }
 
+// TODO - seperate out a function for use within pure C code
 bl_val_t* bl_builtin_eq(bl_val_t* env, bl_val_t* args) {
       bl_val_t* a = bl_eval_expr(env,bl_list_car(args));
       bl_val_t* b = bl_eval_expr(env,bl_list_car(bl_list_cdr(args)));

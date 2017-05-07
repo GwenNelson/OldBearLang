@@ -1,3 +1,4 @@
+Rewrite parser to directly construct expressions rather than having to parse whole files into an AST first
 Add a gdb pretty-printer for bl_val_t
 Implement a NICE s-expression reader using readline
    Write new readline:
@@ -23,7 +24,8 @@ Implement control-flow operators
       if eval(val) is equal to eval(case), then expr is evaluated
    loop operator (loop expr expr expr ...)
       just evaluates the expressions forever
-
+Rewrite memory management to integrate better garbage collection and add slab/pre-allocation support
+Implement user-specified operators
 Implement reading files from command line
 Rework environment to use a primitive hashtable type
 
@@ -86,4 +88,4 @@ Implement loading plain source modules
 Implement loading compiled modules via dlopen() and binding into environments
    use init() to return an environment
 
-Extend :: and friends to automatically use imported files
+Add standard library and default search path

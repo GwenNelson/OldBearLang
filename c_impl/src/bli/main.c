@@ -162,10 +162,21 @@ void do_tty_reads() {
      }
 }
 
+void run_tests() {
+     bl_val_t* test_hashmap = bl_mk_hashmap(4);
+     bl_hashmap_set(test_hashmap,bl_mk_symbol("foo"),bl_mk_str("foobar"));
+     bl_hashmap_set(test_hashmap,bl_mk_symbol("bla"),bl_mk_str("meow"));
+     bl_dump_expr(bl_hashmap_get(test_hashmap,bl_mk_symbol("foo")));printf("\n");
+     bl_dump_expr(bl_hashmap_get(test_hashmap,bl_mk_symbol("bla")));printf("\n");
+     bl_hashmap_set(test_hashmap,bl_mk_symbol("foo"),bl_mk_str("new foo value"));
+     bl_dump_expr(bl_hashmap_get(test_hashmap,bl_mk_symbol("foo")));printf("\n");
+
+}
 
 int main(int argc, char** argv) {
     repl_env  = bl_init_env();
     init_mpc();
+    run_tests();
     if(argc==2) {
        mpc_result_t r;
        if(mpc_parse_contents(argv[1],mpc_Lispy,&r)) {

@@ -74,4 +74,17 @@ bl_val_t* bl_mk_fn_bl(bl_val_t* args, bl_val_t* body) {
        return retval;
 }
 
-
+bl_val_t* bl_mk_hashmap(int bucket_count) {
+       bl_val_t* retval             = bl_val_alloc();
+       retval->type                 = VAL_TYPE_HASHMAP;
+       retval->hashmap_buckets      = bl_val_alloc_block(bucket_count);
+       retval->hashmap_bucket_count = bucket_count;
+       int i=0;
+       for(i=0; i<bucket_count; i++) {
+           // TODO: make bl_val_alloc_block set types etc
+           retval->hashmap_buckets[i].type = VAL_TYPE_CONS;
+           retval->hashmap_buckets[i].car  = NULL;
+           retval->hashmap_buckets[i].cdr  = NULL;
+       }
+       return retval;
+}

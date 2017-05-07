@@ -38,6 +38,12 @@ bl_val_t* bl_mk_fn_native(bl_native_fn_t f);              // creates a function 
 bl_val_t* bl_mk_oper_native(bl_native_fn_t f);            // creates an operator using native code and returns a pointer to it with a single reference
 bl_val_t* bl_mk_fn_bl(bl_val_t* args, bl_val_t* body);    // creates a function using BearLang code, args and body are reference incremented, returns pointer with single reference
 bl_val_t* bl_mk_bool(bool b);                             // creates a boolean value
+bl_val_t* bl_mk_hashmap(int bucket_count);                // creates a hashmap
+
+// ==== HASHMAP OPERATIONS ====
+// implemented in bl_hashmap_ops.c
+void      bl_hashmap_set(bl_val_t* map, bl_val_t* k, bl_val_t* v);  // sets a hashmap value, this will overwrite any previous value
+bl_val_t* bl_hashmap_get(bl_val_t* map, bl_val_t* k);               // gets a hashmap value, returns NULL if not found
 
 // ==== SYMBOL OPERATIONS ====
 // implemented in bl_symbol_ops.c
