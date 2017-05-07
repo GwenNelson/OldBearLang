@@ -9,9 +9,11 @@ set(BEARLANG_BLI_SOURCE ${BEARLANG_BLI_SOURCE})
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+add_definitions(-DGC_DEBUG)
 add_library(bearlangcore ${BEARLANG_CORE_SOURCE})
+target_link_libraries(bearlangcore gc readline)
 
 add_executable(bli ${BEARLANG_BLI_SOURCE})
-target_link_libraries(bli bearlangcore readline)
+target_link_libraries(bli bearlangcore gc)
 
 

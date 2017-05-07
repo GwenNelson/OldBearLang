@@ -1,15 +1,15 @@
 #include <bearlang/bearlang.h>
 
-#include <malloc.h>
+#include <gc.h>
 
 bl_val_t* bl_val_alloc() {
-       bl_val_t* retval   = calloc(sizeof(bl_val_t),1);
+       bl_val_t* retval   = GC_MALLOC(sizeof(bl_val_t));
        retval->alloc_type = VAL_ALLOC_DYNAMIC_SINGLE;
        return bl_val_ref(retval);
 }
 
 bl_val_t* bl_val_alloc_block(int n) {
-       bl_val_t* retval  = calloc(sizeof(bl_val_t),n);
+       bl_val_t* retval  = GC_MALLOC(sizeof(bl_val_t)*n);
        retval->block_len = n;
        int i=0;
        for(i=0; i<n; i++) {
@@ -68,6 +68,10 @@ bl_val_t* bl_val_free(bl_val_t* v) {
           break;
           case VAL_TYPE_OPER_NATIVE:
           break;
+          case VAL_TYPE_HASHMAP:
+               bl_val_free(v->hashmap_buckets);
+               GC_FREE(v->hashmap_buckets);
+          break;
           case VAL_TYPE_ENV:
                bl_val_free(v->env_parent);
                bl_val_free(v->env_contents);
@@ -76,10 +80,10 @@ bl_val_t* bl_val_free(bl_val_t* v) {
        switch(v->alloc_type) {
           case VAL_ALLOC_DYNAMIC_BLOCK:
                v->head_block->refs--;
-               if(v->head_block->refs ==0) free(v->head_block);
+               if(v->head_block->refs ==0) GC_free(v->head_block);
           break;
           case VAL_ALLOC_DYNAMIC_SINGLE:
-               free(v);
+               GC_free(v);
           break;
        }
 }

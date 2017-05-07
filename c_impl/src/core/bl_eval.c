@@ -1,3 +1,4 @@
+#include <gc.h>
 #include <bearlang/bearlang.h>
 
 bl_val_t* bl_eval_symbol(bl_val_t* env, bl_val_t* s) {
@@ -43,6 +44,7 @@ bl_val_t* bl_eval_bl_func(bl_val_t* env, bl_val_t* func, bl_val_t* params) {
 }
 
 bl_val_t* bl_eval_expr(bl_val_t* env, bl_val_t* expr) {
+      GC_collect_a_little();
       if(expr == NULL) return NULL;
       switch(expr->type) {
           case VAL_TYPE_NIL:
